@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="i9d7jL" name="PlateReverb2" displaySplashScreen="1" reportAppUsage="1"
+              splashScreenColour="Dark" projectType="audioplug" version="1.0.0"
+              bundleIdentifier="com.yourcompany.PlateReverb2" includeBinaryInAppConfig="1"
+              cppLanguageStandard="11" buildVST="1" buildVST3="0" buildAU="1"
+              buildAUv3="0" buildRTAS="0" buildAAX="0" buildStandalone="1"
+              enableIAA="0" pluginName="PlateReverb2" pluginDesc="PlateReverb2"
+              pluginManufacturer="yourcompany" pluginManufacturerCode="Manu"
+              pluginCode="I9d7" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="0"
+              pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
+              pluginAUExportPrefix="PlateReverb2AU" pluginRTASCategory="" aaxIdentifier="com.yourcompany.PlateReverb2"
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.1.2">
+  <MAINGROUP id="TmUE3W" name="PlateReverb2">
+    <GROUP id="{0486E30D-3E49-6B68-C729-C192E23971C5}" name="Source">
+      <FILE id="q5pDmR" name="RedButton.h" compile="0" resource="0" file="Source/RedButton.h"/>
+      <FILE id="wUJ4qY" name="ElementOnPlate.h" compile="0" resource="0"
+            file="Source/ElementOnPlate.h"/>
+      <FILE id="kfEYwY" name="KnobsArea.h" compile="0" resource="0" file="Source/KnobsArea.h"/>
+      <FILE id="eCdtN9" name="FlangeCurve.h" compile="0" resource="0" file="Source/FlangeCurve.h"/>
+      <FILE id="WVqEez" name="OutputR.h" compile="0" resource="0" file="Source/OutputR.h"/>
+      <FILE id="BKKUjT" name="OutputL.h" compile="0" resource="0" file="Source/OutputL.h"/>
+      <FILE id="LqFXqT" name="Edges.h" compile="0" resource="0" file="Source/Edges.h"/>
+      <FILE id="qbxO7f" name="Input.h" compile="0" resource="0" file="Source/Input.h"/>
+      <FILE id="HyVNKz" name="CBC.h" compile="0" resource="0" file="Source/CBC.h"/>
+      <FILE id="OnypTH" name="PlateResizer.h" compile="0" resource="0" file="Source/PlateResizer.h"/>
+      <FILE id="fDLJel" name="PlateCorner.h" compile="0" resource="0" file="Source/PlateCorner.h"/>
+      <FILE id="ErRfR6" name="Plate.h" compile="0" resource="0" file="Source/Plate.h"/>
+      <FILE id="U4rM9c" name="PlateArea.h" compile="0" resource="0" file="Source/PlateArea.h"/>
+      <FILE id="jZ1AB2" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="NWnrkQ" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="xd0Ckx" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="aA6hME" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="PlateReverb2"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="PlateReverb2"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../modules"/>
+        <MODULEPATH id="juce_events" path="../modules"/>
+        <MODULEPATH id="juce_graphics" path="../modules"/>
+        <MODULEPATH id="juce_data_structures" path="../modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../modules"/>
+        <MODULEPATH id="juce_cryptography" path="../modules"/>
+        <MODULEPATH id="juce_video" path="../modules"/>
+        <MODULEPATH id="juce_opengl" path="../modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_video" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+</JUCERPROJECT>
