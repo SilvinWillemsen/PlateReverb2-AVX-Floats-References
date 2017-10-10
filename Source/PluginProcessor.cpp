@@ -264,12 +264,10 @@ void PlateReverb2AudioProcessor::calculateCoefficients()
         factorCdA.push_back (static_cast<float> (factorC / factorA));
     }
 
-    
     for (int m = 0; m < unstableModes.size(); ++m)
     {
         factorBdA[unstableModes[m]] = 0;
         factorIndA[unstableModes[m]] = 0;
-        
     }
     
 }
@@ -312,6 +310,12 @@ void PlateReverb2AudioProcessor::AVXAll(){
     }
 }
 
+inline void MakeAVX (std::vector<__m256>& __outputData, std::vector<float>& inputData, int n)
+{
+    __outputData[n] =_mm256_setr_ps (inputData[0], inputData[1], inputData[2], inputData[3],
+                                     inputData[4], inputData[5], inputData[6], inputData[7]);
+}
+
 inline void PlateReverb2AudioProcessor::AVXPhiOutL (int m, int n)
 {
     __phiOutL[n] = _mm256_setr_ps (phiOutL[m], phiOutL[m+1], phiOutL[m+2], phiOutL[m+3],
@@ -337,17 +341,17 @@ inline void PlateReverb2AudioProcessor::AVXFactorCdA (int m, int n)
 
 inline void PlateReverb2AudioProcessor::AVXFactorIndA (int m, int n)
 {
-    __factorIndA[n] = _mm256_setr_ps (factorIndA[m], factorIndA[m+1], factorIndA[m+2], factorIndA[m+3],
-                                      factorIndA[m+4], factorIndA[m+5], factorIndA[m+6], factorIndA[m+7]);
+    __factorIndA[n] = _mm256_setr_ps (factorIndA[0], factorIndA[1], factorIndA[2], factorIndA[3],
+                                      factorIndA[4], factorIndA[5], factorIndA[6], factorIndA[7]);
 }
 
-inline void PlateReverb2AudioProcessor::AVXQPrev (std::vector<float> qPrev, int m, int n)
+inline void PlateReverb2AudioProcessor::AVXQPrev (std::vector<float>& qPrev, int m, int n)
 {
     __qPrev[n] = _mm256_setr_ps (qPrev[m], qPrev[m+1], qPrev[m+2], qPrev[m+3],
                                  qPrev[m+4], qPrev[m+5], qPrev[m+6], qPrev[m+7]);
 }
 
-inline void PlateReverb2AudioProcessor::AVXQNow (std::vector<float> qNow, int m, int n)
+inline void PlateReverb2AudioProcessor::AVXQNow (std::vector<float>& qNow, int m, int n)
 {
     __qNow[n] = _mm256_setr_ps (qNow[m], qNow[m+1], qNow[m+2], qNow[m+3],
                                 qNow[m+4], qNow[m+5], qNow[m+6], qNow[m+7]);
@@ -362,18 +366,17 @@ inline void PlateReverb2AudioProcessor::AVXQNow (std::vector<float> qNow, int m,
 
 void PlateReverb2AudioProcessor::plateStretching()
 {
-    double cm = 12.0 * (log (10.0) / decay);
+    factorIndA.clear();
+    unstableModes.clear();
+    calculatePhi();
+    
+    const double cm = 12.0 * (log (10.0) / decay);
+    const double factorA = 1.0 / pow(k, 2) + cm / (rho * h * k);
+    
     double factorB;
-    double factorA = 1.0 / pow(k, 2) + cm / (rho * h * k);
     double factorIn;
     
     double val = 0.0;
-
-    factorIndA.clear();
-    unstableModes.clear();
-    
-    calculatePhi();
-    
     
     for (int m = 0; m < vectorLength; ++m)
     {
@@ -418,8 +421,6 @@ void PlateReverb2AudioProcessor::plateStretching()
         qNow[unstableModes[m]] = 0;
         qPrev[unstableModes[m]] = 0;
         factorIndA[unstableModes[m]] = 0;
-        //phiOutL[unstableModes[m]] = 0;
-        //phiOutR[unstableModes[m]] = 0;
     }
     
     for (int m = 0; m < AVXZeros; ++m)
@@ -434,8 +435,6 @@ void PlateReverb2AudioProcessor::plateStretching()
         AVXQPrev(qPrev, m, n);
         AVXFactorIndA(m, n);
         AVXFactorBdA(m, n);
-        //AVXPhiOutL(m, n);
-        //AVXPhiOutR(m, n);
         ++n;
     }
 
@@ -450,9 +449,6 @@ void PlateReverb2AudioProcessor::plateStretching()
 void PlateReverb2AudioProcessor::setFlanging(bool left)
 {
     const double detail (fs/2.0);
-
-    std::vector<__m256> __zeroVector (AVXVectorLength, _mm256_setzero_ps());
-    std::vector<std::vector<__m256>> __zeroMatrix (detail + 1, __zeroVector);
     
     /*
      ==============================================================================
@@ -472,25 +468,34 @@ void PlateReverb2AudioProcessor::setFlanging(bool left)
             outputLY.push_back (radiusLY * sin (speedLY * 2 * double_Pi * t / detail + phaseLY) + 0.5);
         }
         
-        std::vector<float> phiOutLTemp (vectorLength + AVXZeros, 0);
+        std::vector<float> phiOutLTemp (AVX, 0);
         std::vector<__m256> __phiOutLTemp (AVXVectorLength, _mm256_setzero_ps());
+        
+        const std::vector<__m256> __zeroVector (AVXVectorLength, _mm256_setzero_ps());
+        const std::vector<std::vector<__m256>> __zeroMatrix (detail + 1, __zeroVector);
         __phiOutLFlange = __zeroMatrix;
         
+        int n;
         for (int t = 0; t <= detail; ++t)
         {
-            for (int m = 0; m < vectorLength; ++m)
+            n = 0;
+            for (int m = 0; m < vectorLength + AVXZeros; ++m)
             {
-                phiOutLTemp[m] = static_cast<float> (sin (horizontalModes[m] * double_Pi * outputLX[t])
-                                                     * sin (verticalModes[m] * double_Pi * outputLY[t]));
+                if (m < vectorLength)
+                {
+                    phiOutLTemp[m % AVX] = static_cast<float> (sin (horizontalModes[m] * double_Pi * outputLX[t])
+                                                               * sin (verticalModes[m] * double_Pi * outputLY[t]));
+                } else {
+                    phiOutLTemp[m % AVX] = 0;
+                }
+                
+                if (m % AVX == AVX - 1)
+                {
+                    MakeAVX(__phiOutLTemp, phiOutLTemp, n);
+                    ++n;
+                }
             }
             
-            int n = 0;
-            for (int m = 0; m < vectorLength + AVXZeros; m = m + AVX)
-            {
-                __phiOutLTemp[n] = _mm256_setr_ps (phiOutLTemp[m], phiOutLTemp[m+1], phiOutLTemp[m+2], phiOutLTemp[m+3], phiOutLTemp[m+4],
-                                                   phiOutLTemp[m+5], phiOutLTemp[m+6], phiOutLTemp[m+7]);
-                ++n;
-            }
             __phiOutLFlange[t] = __phiOutLTemp;
         }
         
@@ -513,31 +518,38 @@ void PlateReverb2AudioProcessor::setFlanging(bool left)
             outputRY.push_back (radiusRY * sin (speedRY * 2 * double_Pi * t / detail + phaseRY) + 0.5);
         }
         
-        std::vector<float> phiOutRTemp (vectorLength + AVXZeros, 0);
+        std::vector<float> phiOutRTemp (AVX, 0);
         std::vector<__m256> __phiOutRTemp (AVXVectorLength, _mm256_setzero_ps());
-        __phiOutRFlange = __zeroMatrix;
         
+        const std::vector<__m256> __zeroVector (AVXVectorLength, _mm256_setzero_ps());
+        const std::vector<std::vector<__m256>> __zeroMatrix (detail + 1, __zeroVector);
+        __phiOutRFlange = std::move (__zeroMatrix);
+        
+        int n;
         for (int t = 0; t <= detail; ++t)
         {
-            for (int m = 0; m < vectorLength; ++m)
+            n = 0;
+            for (int m = 0; m < vectorLength + AVXZeros; ++m)
             {
-            phiOutRTemp[m] = static_cast<float> (sin (horizontalModes[m] * double_Pi * outputRX[t])
-                                                 * sin (verticalModes[m] * double_Pi * outputRY[t]));
+                if (m < vectorLength)
+                {
+                    phiOutRTemp[m % AVX] = static_cast<float> (sin (horizontalModes[m] * double_Pi * outputRX[t])
+                                                               * sin (verticalModes[m] * double_Pi * outputRY[t]));
+                } else {
+                    phiOutRTemp[m % AVX] = 0;
+                }
                 
+                if (m % AVX == AVX - 1)
+                {
+                    MakeAVX(__phiOutRTemp, phiOutRTemp, n);
+                    ++n;
+                }
             }
             
-            int n = 0;
-            for (int m = 0; m < vectorLength + AVXZeros; m = m + AVX)
-            {
-                __phiOutRTemp[n] = _mm256_setr_ps (phiOutRTemp[m], phiOutRTemp[m+1], phiOutRTemp[m+2], phiOutRTemp[m+3], phiOutRTemp[m+4],
-                                                   phiOutRTemp[m+5], phiOutRTemp[m+6], phiOutRTemp[m+7]);
-                ++n;
-            }
             __phiOutRFlange[t] = __phiOutRTemp;
         }
         
     }
-
 }
 
 /*
@@ -549,41 +561,50 @@ void PlateReverb2AudioProcessor::setFlanging(bool left)
 
 void PlateReverb2AudioProcessor::calculateFactorIndA()
 {
-    double inputX (positions.getInput().getX());
-    double inputY (positions.getInput().getY());
+    const double& inputX = positions.getInput().getX();
+    const double& inputY = positions.getInput().getY();
     
-    double cm = 12.0 * (log (10.0) / decay);
+    const double cm = 12.0 * (log (10.0) / decay);
+    const double factorA = 1.0 / pow (k, 2) + cm / (rho * h * k);
     
-    double factorA = 1.0 / pow (k, 2) + cm / (rho * h * k);
     double phiIn;
-    
     factorIndA.clear();
+    
+    if (unstableModes.size() == 0)
+    {
+        unstableModes = { static_cast<int>(vectorLength + AVXZeros + 1) };
+    }
+    
+    int i = 0;
+    int n = 0;
+    std::vector<float> tempVector (AVX, 0.0);
+    __factorIndA = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
+    
     for (int m = 0; m < vectorLength + AVXZeros; ++m)
     {
-        factorIndA.push_back(0);
+        if (m == unstableModes[i])
+        {
+            factorIndA.push_back (0);
+            ++i;
+        }
+        else if (m >= vectorLength)
+        {
+            factorIndA.push_back (0);
+        } else {
+            phiIn = (sin (horizontalModes[m] * double_Pi * inputX) * sin (verticalModes[m] * double_Pi * inputY));
+            factorIndA.push_back (static_cast<float> ((phiIn / (rho * h)) / factorA));
+            tempVector[m % 8] = factorIndA[m];
+
+        }
+        
+        if (m % AVX == AVX - 1)
+        {
+            tempVector = { factorIndA.begin() + m - (AVX - 1), factorIndA.begin() + m + 1 };
+            MakeAVX(__factorIndA, tempVector, n);
+            ++n;
+        }
     }
-    
-    for (int m = 0; m < vectorLength; ++m)
-    {
-        phiIn = (sin (horizontalModes[m] * double_Pi * inputX) * sin (verticalModes[m] * double_Pi * inputY));
-        factorIndA[m] = static_cast<float> ((phiIn / (rho * h)) / factorA);
-    }
-    
-    for (int m = 0; m < unstableModes.size(); ++m)
-    {
-        factorIndA[m] = 0;
-    }
-    
-    std::vector<__m256> __zeroVector (AVXVectorLength, _mm256_setzero_ps());
-    __factorIndA = __zeroVector;
-    
-    int n = 0;
-    for (int m = 0; m < AVXVectorLength; ++m)
-    {
-        AVXFactorIndA(m, n);
-        ++n;
-    }
-    
+
 }
 
 /*
@@ -594,29 +615,30 @@ void PlateReverb2AudioProcessor::calculateFactorIndA()
 
 void PlateReverb2AudioProcessor::calculatePhiOutL()
 {
-    double outputLX (positions.getOutputL().getX());
-    double outputLY (positions.getOutputL().getY());
-        
+    const double& outputLX = positions.getOutputL().getX();
+    const double& outputLY = positions.getOutputL().getY();
+
     phiOutL.clear();
-    for (int m = 0; m < vectorLength + AVXZeros; ++m)
-    {
-        phiOutL.push_back(0);
-    }
-    
-    AVXVectorLength = (vectorLength + AVXZeros) / AVX;
-    std::vector<__m256> __zeroVector (AVXVectorLength, _mm256_setzero_ps());
-    __phiOutL = __zeroVector;
-    
-    for (int m = 0; m < vectorLength; ++m)
-    {
-        phiOutL[m] = sin (horizontalModes[m] * double_Pi * outputLX) * sin (verticalModes[m] * double_Pi * outputLY);
-    }
     
     int n = 0;
-    for (int m = 0; m < AVXVectorLength; ++m)
+    std::vector<float> tempVector (AVX, 0.0);
+    __phiOutL = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
+    
+    for (int m = 0; m < vectorLength + AVXZeros; ++m)
     {
-        AVXPhiOutL(m, n);
-        ++n;
+        if (m >= vectorLength)
+        {
+            phiOutL.push_back (0);
+        } else {
+            phiOutL.push_back (sin (horizontalModes[m] * double_Pi * outputLX) * sin (verticalModes[m] * double_Pi * outputLY));
+            tempVector[m % AVX] = phiOutL[m];
+        }
+        
+        if (m % AVX == AVX - 1)
+        {
+            MakeAVX(__phiOutL, tempVector, n);
+            ++n;
+        }
     }
     
 }
@@ -629,29 +651,30 @@ void PlateReverb2AudioProcessor::calculatePhiOutL()
 
 void PlateReverb2AudioProcessor::calculatePhiOutR()
 {
-    double outputRX (positions.getOutputR().getX());
-    double outputRY (positions.getOutputR().getY());
+    const double& outputRX = positions.getOutputR().getX();
+    const double& outputRY = positions.getOutputR().getY();
     
     phiOutR.clear();
-    for (int m = 0; m < vectorLength + AVXZeros; ++m)
-    {
-        phiOutR.push_back(0);
-    }
-    
-    AVXVectorLength = (vectorLength + AVXZeros) / AVX;
-    std::vector<__m256> __zeroVector (AVXVectorLength, _mm256_setzero_ps());
-    __phiOutR = __zeroVector;
-    
-    for (int m = 0; m < vectorLength; ++m)
-    {
-        phiOutR[m] = sin (horizontalModes[m] * double_Pi * outputRX) * sin (verticalModes[m] * double_Pi * outputRY);
-    }
     
     int n = 0;
-    for (int m = 0; m < AVXVectorLength; ++m)
+    std::vector<float> tempVector (AVX, 0.0);
+    __phiOutR = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
+    
+    for (int m = 0; m < vectorLength + AVXZeros; ++m)
     {
-        AVXPhiOutR(m, n);
-        ++n;
+        if (m >= vectorLength)
+        {
+            phiOutR.push_back (0);
+        } else {
+            phiOutR.push_back(sin (horizontalModes[m] * double_Pi * outputRX) * sin (verticalModes[m] * double_Pi * outputRY));
+            tempVector[m % 8] = phiOutL[m];
+        }
+        
+        if (m % AVX == AVX - 1)
+        {
+            MakeAVX(__phiOutR, tempVector, n);
+            ++n;
+        }
     }
 
 }

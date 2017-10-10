@@ -160,8 +160,8 @@ public:
     inline void AVXFactorBdA(int m, int n);
     inline void AVXFactorCdA(int m, int n);
     inline void AVXFactorIndA(int m, int n);
-    inline void AVXQPrev(std::vector<float> qPrev, int m, int n);
-    inline void AVXQNow(std::vector<float> qNow, int m, int n);
+    inline void AVXQPrev(std::vector<float>& qPrev, int m, int n);
+    inline void AVXQNow(std::vector<float>& qNow, int m, int n);
 
     void calculatePhiOutL();
     void calculatePhiOutR();
