@@ -318,36 +318,34 @@ public:
         recalculateR.setBounds (recalculateButtonsArea.reduced (5.0f));
         recalculateR.setColour (TextButton::buttonColourId, Colours::lightsteelblue);
 
-
-
     }
 
-    Slider* getVolumeControl() {return &volumeControl;};
-    Slider* getDecayControl() {return &decayControl;};
-    Slider* getCentsControl() {return &centsControl;};
+    Slider& getVolumeControl() { return volumeControl; };
+    Slider& getDecayControl() { return decayControl; };
+    Slider& getCentsControl() { return centsControl; };
     
-    TextButton* getFlangeButtonL() {return &flangeButtonL;};
-    TextButton* getFlangeButtonR() {return &flangeButtonR;};
+    TextButton& getFlangeButtonL() { return flangeButtonL; };
+    TextButton& getFlangeButtonR() { return flangeButtonR; };
     
-    Slider* getRadiusLX() {return &radiusLX;};
-    Slider* getRadiusLY() {return &radiusLY;};
-    Slider* getRadiusRX() {return &radiusRX;};
-    Slider* getRadiusRY() {return &radiusRY;};
+    Slider& getRadiusLX() { return radiusLX; };
+    Slider& getRadiusLY() { return radiusLY; };
+    Slider& getRadiusRX() { return radiusRX; };
+    Slider& getRadiusRY() { return radiusRY; };
     
-    Slider* getSpeedLX() {return &speedLX;};
-    Slider* getSpeedLY() {return &speedLY;};
-    Slider* getSpeedRX() {return &speedRX;};
-    Slider* getSpeedRY() {return &speedRY;};
+    Slider& getSpeedLX() { return speedLX; };
+    Slider& getSpeedLY() { return speedLY; };
+    Slider& getSpeedRX() { return speedRX; };
+    Slider& getSpeedRY() { return speedRY; };
     
-    Slider* getPhaseLX() {return &phaseLX;};
-    Slider* getPhaseLY() {return &phaseLY;};
-    Slider* getPhaseRX() {return &phaseRX;};
-    Slider* getPhaseRY() {return &phaseRY;};
+    Slider& getPhaseLX() { return phaseLX; };
+    Slider& getPhaseLY() { return phaseLY; };
+    Slider& getPhaseRX() { return phaseRX; };
+    Slider& getPhaseRY() { return phaseRY; };
     
-    TextButton* getRecalculateL() {return &recalculateL;};
-    TextButton* getRecalculateR() {return &recalculateR;};
+    TextButton& getRecalculateL() { return recalculateL; };
+    TextButton& getRecalculateR() { return recalculateR; };
     
-    RedButton* getRedButton() {return &redButton;};
+    RedButton& getRedButton() { return redButton; };
 
 private:
     Slider volumeControl;

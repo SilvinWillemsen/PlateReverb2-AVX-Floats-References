@@ -132,13 +132,13 @@ public:
         flangeCurve.setBounds(plateBounds);
     }
 
-    Slider* getWidthControl() {return &widthControl;};
-    Slider* getHeightControl() {return &heightControl;};
+    Slider& getWidthControl() {return widthControl;};
+    Slider& getHeightControl() {return heightControl;};
             
-    Input* getInput() {return &input;};
-    OutputL* getOutputL() {return &outputL;};
-    OutputR* getOutputR() {return &outputR;};
-    FlangeCurve* getFlangeCurve() {return &flangeCurve;};
+    Input& getInput() {return input;};
+    OutputL& getOutputL() {return outputL;};
+    OutputR& getOutputR() {return outputR;};
+    FlangeCurve& getFlangeCurve() {return flangeCurve;};
         
 private:
     Slider widthControl;

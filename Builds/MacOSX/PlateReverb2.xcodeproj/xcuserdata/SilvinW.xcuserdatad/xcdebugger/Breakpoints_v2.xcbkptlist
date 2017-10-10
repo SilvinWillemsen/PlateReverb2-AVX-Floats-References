@@ -1013,8 +1013,8 @@
                   symbolName = "PlateReverb2AudioProcessor::setFlanging(bool)"
                   moduleName = "PlateReverb2"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/SilvinW/JUCE/PlateReverb2%20AVX%20Floats%20References/Source/PluginProcessor.cpp"
-                  timestampString = "529243591.941947"
+                  urlString = "file:///Users/SilvinW/Desktop/PlateReverb2%20AVX%20Floats%20References/Source/PluginProcessor.cpp"
+                  timestampString = "529319652.773494"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "543"
@@ -1028,8 +1028,8 @@
                   symbolName = "PlateReverb2AudioProcessor::setFlanging(bool)"
                   moduleName = "PlateReverb2"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/SilvinW/JUCE/PlateReverb2%20AVX%20Floats%20References/Source/PluginProcessor.cpp"
-                  timestampString = "529243591.943619"
+                  urlString = "file:///Users/SilvinW/Desktop/PlateReverb2%20AVX%20Floats%20References/Source/PluginProcessor.cpp"
+                  timestampString = "529319652.776713"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "543"
@@ -1043,8 +1043,8 @@
                   symbolName = "PlateReverb2AudioProcessor::setFlanging(bool)"
                   moduleName = "PlateReverb2"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/SilvinW/JUCE/PlateReverb2%20AVX%20Floats%20References/Source/PluginProcessor.cpp"
-                  timestampString = "529243591.945244"
+                  urlString = "file:///Users/SilvinW/Desktop/PlateReverb2%20AVX%20Floats%20References/Source/PluginProcessor.cpp"
+                  timestampString = "529319652.78002"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "543"
@@ -1058,8 +1058,8 @@
                   symbolName = "PlateReverb2AudioProcessor::setFlanging(bool)"
                   moduleName = "PlateReverb2"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/SilvinW/JUCE/PlateReverb2%20AVX%20Floats%20References/Source/PluginProcessor.cpp"
-                  timestampString = "529243591.949552"
+                  urlString = "file:///Users/SilvinW/Desktop/PlateReverb2%20AVX%20Floats%20References/Source/PluginProcessor.cpp"
+                  timestampString = "529319652.782245"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "543"
@@ -1073,8 +1073,8 @@
                   symbolName = "PlateReverb2AudioProcessor::setFlanging(bool)"
                   moduleName = "PlateReverb2"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/SilvinW/JUCE/PlateReverb2%20AVX%20Floats%20References/Source/PluginProcessor.cpp"
-                  timestampString = "529243591.951124"
+                  urlString = "file:///Users/SilvinW/Desktop/PlateReverb2%20AVX%20Floats%20References/Source/PluginProcessor.cpp"
+                  timestampString = "529319652.783732"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "543"
@@ -1231,7 +1231,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/PluginProcessor.cpp"
@@ -1242,6 +1242,38 @@
             endingLineNumber = "180"
             landmarkName = "PlateReverb2AudioProcessor::deleteCents ()"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../Source/PluginProcessor.cpp"
+            timestampString = "529319564.050576"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
+            landmarkName = "PlateReverb2AudioProcessor::calculatePhi()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../Source/PlateArea.h"
+            timestampString = "529322653.717424"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "class PlateArea"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

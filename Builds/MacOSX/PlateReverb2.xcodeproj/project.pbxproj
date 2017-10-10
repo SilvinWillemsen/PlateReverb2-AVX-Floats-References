@@ -46,36 +46,36 @@
 		9EF9756AC37E6EAE7D6B9896 /* include_juce_audio_plugin_client_VST2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1EA7F1348B507056CDEE3FAF /* include_juce_audio_plugin_client_VST2.cpp */; };
 		A1226407022C0678CF98DAF7 /* include_juce_audio_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 52B8E95060D048021D9930EF /* include_juce_audio_basics.mm */; };
 		A59620B8640CF57D0865DC93 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6981F53E28B58288A515C7A /* QuartzCore.framework */; };
-		AA7E3CA01F8AB0B800DC1100 /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 70A76F3AEEBCA8243ECEA0AC /* RecentFilesMenuTemplate.nib */; };
-		AA7E3CA11F8AB0B800DC1100 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87A8FA21FAC7AB40FBACAA0 /* Accelerate.framework */; };
-		AA7E3CA21F8AB0B800DC1100 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F6CC6634950B87C7FE4B7AD /* AudioToolbox.framework */; };
-		AA7E3CA31F8AB0B800DC1100 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3991295AD6432BECFBF11B0 /* AVFoundation.framework */; };
-		AA7E3CA41F8AB0B800DC1100 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82D69E3C920AACBDBBE0775 /* AVKit.framework */; };
-		AA7E3CA51F8AB0B800DC1100 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9846F38D23E955D2F966DB4 /* Carbon.framework */; };
-		AA7E3CA61F8AB0B800DC1100 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 829F8C759CE1CEF3BAABB400 /* Cocoa.framework */; };
-		AA7E3CA71F8AB0B800DC1100 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C07F2EBB02DDD2B77A85A0 /* CoreAudio.framework */; };
-		AA7E3CA81F8AB0B800DC1100 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A11E71A27B278814412177F /* CoreMedia.framework */; };
-		AA7E3CA91F8AB0B800DC1100 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D62A112EBF4F733EC2AD219 /* CoreMIDI.framework */; };
-		AA7E3CAA1F8AB0B800DC1100 /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4E41AB7B43C218907D876D /* DiscRecording.framework */; };
-		AA7E3CAB1F8AB0B800DC1100 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A69EFD72E30399259EFC7A2D /* IOKit.framework */; };
-		AA7E3CAC1F8AB0B800DC1100 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C6CA2514CA74544CA01A67 /* OpenGL.framework */; };
-		AA7E3CAD1F8AB0B800DC1100 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6981F53E28B58288A515C7A /* QuartzCore.framework */; };
-		AA7E3CAE1F8AB0B800DC1100 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADA4AE0CFBC0CA7B89416F76 /* WebKit.framework */; };
-		AA7E3CAF1F8AB0B800DC1100 /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 70A76F3AEEBCA8243ECEA0AC /* RecentFilesMenuTemplate.nib */; };
-		AA7E3CB01F8AB0B800DC1100 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87A8FA21FAC7AB40FBACAA0 /* Accelerate.framework */; };
-		AA7E3CB11F8AB0B800DC1100 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F6CC6634950B87C7FE4B7AD /* AudioToolbox.framework */; };
-		AA7E3CB21F8AB0B800DC1100 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3991295AD6432BECFBF11B0 /* AVFoundation.framework */; };
-		AA7E3CB31F8AB0B800DC1100 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82D69E3C920AACBDBBE0775 /* AVKit.framework */; };
-		AA7E3CB41F8AB0B800DC1100 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9846F38D23E955D2F966DB4 /* Carbon.framework */; };
-		AA7E3CB51F8AB0B800DC1100 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 829F8C759CE1CEF3BAABB400 /* Cocoa.framework */; };
-		AA7E3CB61F8AB0B800DC1100 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C07F2EBB02DDD2B77A85A0 /* CoreAudio.framework */; };
-		AA7E3CB71F8AB0B800DC1100 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A11E71A27B278814412177F /* CoreMedia.framework */; };
-		AA7E3CB81F8AB0B800DC1100 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D62A112EBF4F733EC2AD219 /* CoreMIDI.framework */; };
-		AA7E3CB91F8AB0B800DC1100 /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4E41AB7B43C218907D876D /* DiscRecording.framework */; };
-		AA7E3CBA1F8AB0B800DC1100 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A69EFD72E30399259EFC7A2D /* IOKit.framework */; };
-		AA7E3CBB1F8AB0B800DC1100 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C6CA2514CA74544CA01A67 /* OpenGL.framework */; };
-		AA7E3CBC1F8AB0B800DC1100 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6981F53E28B58288A515C7A /* QuartzCore.framework */; };
-		AA7E3CBD1F8AB0B800DC1100 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADA4AE0CFBC0CA7B89416F76 /* WebKit.framework */; };
+		AA9434811F8BB7B70009383B /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 70A76F3AEEBCA8243ECEA0AC /* RecentFilesMenuTemplate.nib */; };
+		AA9434821F8BB7B70009383B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87A8FA21FAC7AB40FBACAA0 /* Accelerate.framework */; };
+		AA9434831F8BB7B70009383B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F6CC6634950B87C7FE4B7AD /* AudioToolbox.framework */; };
+		AA9434841F8BB7B70009383B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3991295AD6432BECFBF11B0 /* AVFoundation.framework */; };
+		AA9434851F8BB7B70009383B /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82D69E3C920AACBDBBE0775 /* AVKit.framework */; };
+		AA9434861F8BB7B70009383B /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9846F38D23E955D2F966DB4 /* Carbon.framework */; };
+		AA9434871F8BB7B70009383B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 829F8C759CE1CEF3BAABB400 /* Cocoa.framework */; };
+		AA9434881F8BB7B70009383B /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C07F2EBB02DDD2B77A85A0 /* CoreAudio.framework */; };
+		AA9434891F8BB7B70009383B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A11E71A27B278814412177F /* CoreMedia.framework */; };
+		AA94348A1F8BB7B70009383B /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D62A112EBF4F733EC2AD219 /* CoreMIDI.framework */; };
+		AA94348B1F8BB7B70009383B /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4E41AB7B43C218907D876D /* DiscRecording.framework */; };
+		AA94348C1F8BB7B70009383B /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A69EFD72E30399259EFC7A2D /* IOKit.framework */; };
+		AA94348D1F8BB7B70009383B /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C6CA2514CA74544CA01A67 /* OpenGL.framework */; };
+		AA94348E1F8BB7B70009383B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6981F53E28B58288A515C7A /* QuartzCore.framework */; };
+		AA94348F1F8BB7B70009383B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADA4AE0CFBC0CA7B89416F76 /* WebKit.framework */; };
+		AA9434901F8BB7B70009383B /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 70A76F3AEEBCA8243ECEA0AC /* RecentFilesMenuTemplate.nib */; };
+		AA9434911F8BB7B70009383B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87A8FA21FAC7AB40FBACAA0 /* Accelerate.framework */; };
+		AA9434921F8BB7B70009383B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F6CC6634950B87C7FE4B7AD /* AudioToolbox.framework */; };
+		AA9434931F8BB7B70009383B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3991295AD6432BECFBF11B0 /* AVFoundation.framework */; };
+		AA9434941F8BB7B70009383B /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82D69E3C920AACBDBBE0775 /* AVKit.framework */; };
+		AA9434951F8BB7B70009383B /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9846F38D23E955D2F966DB4 /* Carbon.framework */; };
+		AA9434961F8BB7B70009383B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 829F8C759CE1CEF3BAABB400 /* Cocoa.framework */; };
+		AA9434971F8BB7B70009383B /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C07F2EBB02DDD2B77A85A0 /* CoreAudio.framework */; };
+		AA9434981F8BB7B70009383B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A11E71A27B278814412177F /* CoreMedia.framework */; };
+		AA9434991F8BB7B70009383B /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D62A112EBF4F733EC2AD219 /* CoreMIDI.framework */; };
+		AA94349A1F8BB7B70009383B /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E4E41AB7B43C218907D876D /* DiscRecording.framework */; };
+		AA94349B1F8BB7B70009383B /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A69EFD72E30399259EFC7A2D /* IOKit.framework */; };
+		AA94349C1F8BB7B70009383B /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C6CA2514CA74544CA01A67 /* OpenGL.framework */; };
+		AA94349D1F8BB7B70009383B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6981F53E28B58288A515C7A /* QuartzCore.framework */; };
+		AA94349E1F8BB7B70009383B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADA4AE0CFBC0CA7B89416F76 /* WebKit.framework */; };
 		B2CB0E79E7EDF54FC2E6C7BD /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D62A112EBF4F733EC2AD219 /* CoreMIDI.framework */; };
 		B2D6B0D91E25292956628F04 /* include_juce_audio_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = A964B3CE260E97CEF60F5D3A /* include_juce_audio_devices.mm */; };
 		B41C3C7620CAC69329C52E47 /* include_juce_audio_plugin_client_AU_2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 40B2561CC0E672C961CBC32E /* include_juce_audio_plugin_client_AU_2.mm */; };
@@ -97,28 +97,28 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		AA7E3CBE1F8AB0BE00DC1100 /* PBXContainerItemProxy */ = {
+		AA94349F1F8BB7B80009383B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D8786F1B553E6DCF7B54AEE0 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 5EE3ECA5C58830AF5085D268;
 			remoteInfo = "PlateReverb2 - VST";
 		};
-		AA7E3CBF1F8AB0BE00DC1100 /* PBXContainerItemProxy */ = {
+		AA9434A01F8BB7B80009383B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D8786F1B553E6DCF7B54AEE0 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 4AE6030CA171F4F69BD4D5B4;
 			remoteInfo = "PlateReverb2 - Shared Code";
 		};
-		AA7E3CC01F8AB0BE00DC1100 /* PBXContainerItemProxy */ = {
+		AA9434A11F8BB7B80009383B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D8786F1B553E6DCF7B54AEE0 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 59B3E4ECEC88CD45AF263882;
 			remoteInfo = "PlateReverb2 - AU";
 		};
-		AA7E3CC11F8AB0BE00DC1100 /* PBXContainerItemProxy */ = {
+		AA9434A21F8BB7B80009383B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D8786F1B553E6DCF7B54AEE0 /* Project object */;
 			proxyType = 1;
@@ -236,20 +236,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA7E3CB01F8AB0B800DC1100 /* Accelerate.framework in Frameworks */,
-				AA7E3CB11F8AB0B800DC1100 /* AudioToolbox.framework in Frameworks */,
-				AA7E3CB21F8AB0B800DC1100 /* AVFoundation.framework in Frameworks */,
-				AA7E3CB31F8AB0B800DC1100 /* AVKit.framework in Frameworks */,
-				AA7E3CB41F8AB0B800DC1100 /* Carbon.framework in Frameworks */,
-				AA7E3CB51F8AB0B800DC1100 /* Cocoa.framework in Frameworks */,
-				AA7E3CB61F8AB0B800DC1100 /* CoreAudio.framework in Frameworks */,
-				AA7E3CB71F8AB0B800DC1100 /* CoreMedia.framework in Frameworks */,
-				AA7E3CB81F8AB0B800DC1100 /* CoreMIDI.framework in Frameworks */,
-				AA7E3CB91F8AB0B800DC1100 /* DiscRecording.framework in Frameworks */,
-				AA7E3CBA1F8AB0B800DC1100 /* IOKit.framework in Frameworks */,
-				AA7E3CBB1F8AB0B800DC1100 /* OpenGL.framework in Frameworks */,
-				AA7E3CBC1F8AB0B800DC1100 /* QuartzCore.framework in Frameworks */,
-				AA7E3CBD1F8AB0B800DC1100 /* WebKit.framework in Frameworks */,
+				AA9434911F8BB7B70009383B /* Accelerate.framework in Frameworks */,
+				AA9434921F8BB7B70009383B /* AudioToolbox.framework in Frameworks */,
+				AA9434931F8BB7B70009383B /* AVFoundation.framework in Frameworks */,
+				AA9434941F8BB7B70009383B /* AVKit.framework in Frameworks */,
+				AA9434951F8BB7B70009383B /* Carbon.framework in Frameworks */,
+				AA9434961F8BB7B70009383B /* Cocoa.framework in Frameworks */,
+				AA9434971F8BB7B70009383B /* CoreAudio.framework in Frameworks */,
+				AA9434981F8BB7B70009383B /* CoreMedia.framework in Frameworks */,
+				AA9434991F8BB7B70009383B /* CoreMIDI.framework in Frameworks */,
+				AA94349A1F8BB7B70009383B /* DiscRecording.framework in Frameworks */,
+				AA94349B1F8BB7B70009383B /* IOKit.framework in Frameworks */,
+				AA94349C1F8BB7B70009383B /* OpenGL.framework in Frameworks */,
+				AA94349D1F8BB7B70009383B /* QuartzCore.framework in Frameworks */,
+				AA94349E1F8BB7B70009383B /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,22 +257,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA7E3CA11F8AB0B800DC1100 /* Accelerate.framework in Frameworks */,
-				AA7E3CA21F8AB0B800DC1100 /* AudioToolbox.framework in Frameworks */,
+				AA9434821F8BB7B70009383B /* Accelerate.framework in Frameworks */,
+				AA9434831F8BB7B70009383B /* AudioToolbox.framework in Frameworks */,
 				83AB056A88A8EF656469C0E5 /* AudioUnit.framework in Frameworks */,
-				AA7E3CA31F8AB0B800DC1100 /* AVFoundation.framework in Frameworks */,
-				AA7E3CA41F8AB0B800DC1100 /* AVKit.framework in Frameworks */,
-				AA7E3CA51F8AB0B800DC1100 /* Carbon.framework in Frameworks */,
-				AA7E3CA61F8AB0B800DC1100 /* Cocoa.framework in Frameworks */,
-				AA7E3CA71F8AB0B800DC1100 /* CoreAudio.framework in Frameworks */,
+				AA9434841F8BB7B70009383B /* AVFoundation.framework in Frameworks */,
+				AA9434851F8BB7B70009383B /* AVKit.framework in Frameworks */,
+				AA9434861F8BB7B70009383B /* Carbon.framework in Frameworks */,
+				AA9434871F8BB7B70009383B /* Cocoa.framework in Frameworks */,
+				AA9434881F8BB7B70009383B /* CoreAudio.framework in Frameworks */,
 				CE8681BE0692E27C67204EA9 /* CoreAudioKit.framework in Frameworks */,
-				AA7E3CA81F8AB0B800DC1100 /* CoreMedia.framework in Frameworks */,
-				AA7E3CA91F8AB0B800DC1100 /* CoreMIDI.framework in Frameworks */,
-				AA7E3CAA1F8AB0B800DC1100 /* DiscRecording.framework in Frameworks */,
-				AA7E3CAB1F8AB0B800DC1100 /* IOKit.framework in Frameworks */,
-				AA7E3CAC1F8AB0B800DC1100 /* OpenGL.framework in Frameworks */,
-				AA7E3CAD1F8AB0B800DC1100 /* QuartzCore.framework in Frameworks */,
-				AA7E3CAE1F8AB0B800DC1100 /* WebKit.framework in Frameworks */,
+				AA9434891F8BB7B70009383B /* CoreMedia.framework in Frameworks */,
+				AA94348A1F8BB7B70009383B /* CoreMIDI.framework in Frameworks */,
+				AA94348B1F8BB7B70009383B /* DiscRecording.framework in Frameworks */,
+				AA94348C1F8BB7B70009383B /* IOKit.framework in Frameworks */,
+				AA94348D1F8BB7B70009383B /* OpenGL.framework in Frameworks */,
+				AA94348E1F8BB7B70009383B /* QuartzCore.framework in Frameworks */,
+				AA94348F1F8BB7B70009383B /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -625,7 +625,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA7E3CA01F8AB0B800DC1100 /* RecentFilesMenuTemplate.nib in Resources */,
+				AA9434811F8BB7B70009383B /* RecentFilesMenuTemplate.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -641,7 +641,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA7E3CAF1F8AB0B800DC1100 /* RecentFilesMenuTemplate.nib in Resources */,
+				AA9434901F8BB7B70009383B /* RecentFilesMenuTemplate.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -715,22 +715,22 @@
 		9EFF44047AC901421E28EA73 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5EE3ECA5C58830AF5085D268 /* PlateReverb2 - VST */;
-			targetProxy = AA7E3CBE1F8AB0BE00DC1100 /* PBXContainerItemProxy */;
+			targetProxy = AA94349F1F8BB7B80009383B /* PBXContainerItemProxy */;
 		};
 		A524B752BC74BE7642CB16E8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 59B3E4ECEC88CD45AF263882 /* PlateReverb2 - AU */;
-			targetProxy = AA7E3CC01F8AB0BE00DC1100 /* PBXContainerItemProxy */;
+			targetProxy = AA9434A11F8BB7B80009383B /* PBXContainerItemProxy */;
 		};
 		B2640A191E8CEFF18948CC3A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2C3738F650DF08E1545DDB7F /* PlateReverb2 - Standalone Plugin */;
-			targetProxy = AA7E3CC11F8AB0BE00DC1100 /* PBXContainerItemProxy */;
+			targetProxy = AA9434A21F8BB7B80009383B /* PBXContainerItemProxy */;
 		};
 		EEB6DF0D188F501A0F4931FD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4AE6030CA171F4F69BD4D5B4 /* PlateReverb2 - Shared Code */;
-			targetProxy = AA7E3CBF1F8AB0BE00DC1100 /* PBXContainerItemProxy */;
+			targetProxy = AA9434A01F8BB7B80009383B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

@@ -77,42 +77,40 @@ public:
 
     }
     
-    inline void setActiveL (bool active) {activeL = active;};
-    inline void setActiveR (bool active) {activeR = active;};
+    inline void setActiveL (bool active) { activeL = active; };
+    inline void setActiveR (bool active) { activeR = active; };
     
-    inline void setRadiusLX (float radius) {radiusLX = radius;};
-    inline void setRadiusLY (float radius) {radiusLY = radius;};
-    inline void setSpeedLX (float speed) {speedLX = speed;};
-    inline void setSpeedLY (float speed) {speedLY = speed;};
-    inline void setPhaseLX (float phase) {phaseLX = phase;};
-    inline void setPhaseLY (float phase) {phaseLY = phase;};
+    inline void setRadiusLX (float radius) { radiusLX = radius; };
+    inline void setRadiusLY (float radius) { radiusLY = radius; };
+    inline void setSpeedLX (float speed) { speedLX = speed; };
+    inline void setSpeedLY (float speed) { speedLY = speed; };
+    inline void setPhaseLX (float phase) { phaseLX = phase; };
+    inline void setPhaseLY (float phase) { phaseLY = phase; };
     
-    inline void setRadiusRX (float radius) {radiusRX = radius;};
-    inline void setRadiusRY (float radius) {radiusRY = radius;};
-    inline void setSpeedRX (float speed) {speedRX = speed;};
-    inline void setSpeedRY (float speed) {speedRY = speed;};
-    inline void setPhaseRX (float phase) {phaseRX = phase;};
-    inline void setPhaseRY (float phase) {phaseRY = phase;};
+    inline void setRadiusRX (float radius) { radiusRX = radius; };
+    inline void setRadiusRY (float radius) { radiusRY = radius; };
+    inline void setSpeedRX (float speed) { speedRX = speed; };
+    inline void setSpeedRY (float speed) { speedRY = speed; };
+    inline void setPhaseRX (float phase) { phaseRX = phase; };
+    inline void setPhaseRY (float phase) { phaseRY = phase; };
     
-    inline bool getActiveL() {return activeL;};
-    inline bool getActiveR() {return activeR;};
+    inline bool getActiveL() { return activeL; };
+    inline bool getActiveR() { return activeR; };
     
-    inline float getRadiusLX() {return radiusLX;};
-    inline float getRadiusLY() {return radiusLY;};
-    inline float getSpeedLX() {return speedLX;};
-    inline float getSpeedLY() {return speedLY;};
-    inline float getPhaseLX() {return phaseLX;};
-    inline float getPhaseLY() {return phaseLY;};
+    inline float getRadiusLX() { return radiusLX; };
+    inline float getRadiusLY() { return radiusLY; };
+    inline float getSpeedLX() { return speedLX; };
+    inline float getSpeedLY() { return speedLY; };
+    inline float getPhaseLX() { return phaseLX; };
+    inline float getPhaseLY() { return phaseLY; };
     
-    inline float getRadiusRX() {return radiusRX;};
-    inline float getRadiusRY() {return radiusRY;};
-    inline float getSpeedRX() {return speedRX;};
-    inline float getSpeedRY() {return speedRY;};
-    inline float getPhaseRX() {return phaseRX;};
-    inline float getPhaseRY() {return phaseRY;};
-    
+    inline float getRadiusRX() { return radiusRX; };
+    inline float getRadiusRY() { return radiusRY; };
+    inline float getSpeedRX() { return speedRX; };
+    inline float getSpeedRY() { return speedRY; };
+    inline float getPhaseRX() { return phaseRX; };
+    inline float getPhaseRY() { return phaseRY; };
 
-    
 private:
     
     bool activeL = false;

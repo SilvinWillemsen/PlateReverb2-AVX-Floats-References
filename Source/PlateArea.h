@@ -43,9 +43,9 @@ public:
         plate.setBounds (10, 10, 400, 200);
     }
     
-    Plate* getPlate() {return &plate;};
-    Slider* getWidthControl() {return plate.getWidthControl();};
-    Slider* getHeightControl() {return plate.getHeightControl();};
+    Plate& getPlate() {return plate;};
+    Slider& getWidthControl() {return plate.getWidthControl();};
+    Slider& getHeightControl() {return plate.getHeightControl();};
 
 private:
     Plate plate;

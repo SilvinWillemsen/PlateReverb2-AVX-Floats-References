@@ -155,9 +155,9 @@ void PlateReverb2AudioProcessor::calculateAndSortOmegaMatrix()
         ++i;
     }
     
-    sortedOmegaMatrix.setEigenFrequencies(tempEigenFrequencies);
-    sortedOmegaMatrix.setHorizontalModes(tempHorizontalModes);
-    sortedOmegaMatrix.setVerticalModes(tempVerticalModes);
+    sortedOmegaMatrix.setEigenFrequencies (tempEigenFrequencies);
+    sortedOmegaMatrix.setHorizontalModes (tempHorizontalModes);
+    sortedOmegaMatrix.setVerticalModes (tempVerticalModes);
     
 }
 
@@ -173,9 +173,9 @@ void PlateReverb2AudioProcessor::deleteCents ()
     omegaPositionsPrev = omegaPositions;
     omegaPositions.clear();
     
-    std::vector<float> eigenFrequenciesPre (sortedOmegaMatrix.getEigenFrequencies());
-    std::vector<int> horizontalModesPre (sortedOmegaMatrix.getHorizontalModes());
-    std::vector<int> verticalModesPre (sortedOmegaMatrix.getVerticalModes());
+    const std::vector<float>& eigenFrequenciesPre (sortedOmegaMatrix.getEigenFrequencies());
+    const std::vector<int>& horizontalModesPre (sortedOmegaMatrix.getHorizontalModes());
+    const std::vector<int>& verticalModesPre (sortedOmegaMatrix.getVerticalModes());
 
     vectorLength = eigenFrequenciesPre.size();
     
@@ -214,12 +214,12 @@ void PlateReverb2AudioProcessor::deleteCents ()
 
 void PlateReverb2AudioProcessor::calculatePhi()
 {
-    double inputX = positions.getInput().getX();
-    double inputY = positions.getInput().getY();
-    double outputLX = positions.getOutputL().getX();
-    double outputLY = positions.getOutputL().getY();
-    double outputRX = positions.getOutputR().getX();
-    double outputRY = positions.getOutputR().getY();
+    const double& inputX = positions.getInput().getX();
+    const double& inputY = positions.getInput().getY();
+    const double& outputLX = positions.getOutputL().getX();
+    const double& outputLY = positions.getOutputL().getY();
+    const double& outputRX = positions.getOutputR().getX();
+    const double& outputRY = positions.getOutputR().getY();
     
     phiIn.clear();
     phiOutL.clear();
@@ -310,7 +310,7 @@ void PlateReverb2AudioProcessor::AVXAll(){
         AVXFactorBdA (m, n);
         AVXFactorCdA (m, n);
         AVXFactorIndA (m, n);
-        n++;
+        ++n;
     }
 }
 
@@ -352,7 +352,7 @@ inline void PlateReverb2AudioProcessor::AVXQPrev (std::vector<float> qPrev, int 
 inline void PlateReverb2AudioProcessor::AVXQNow (std::vector<float> qNow, int m, int n)
 {
     __qNow[n] = _mm256_setr_ps (qNow[m], qNow[m+1], qNow[m+2], qNow[m+3],
-                                 qNow[m+4], qNow[m+5], qNow[m+6], qNow[m+7]);
+                                qNow[m+4], qNow[m+5], qNow[m+6], qNow[m+7]);
 }
 
 
@@ -881,9 +881,6 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
                     || std::abs (outputSumR * 1500.0 * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0) > 4.0){
                     std::cout<<"Whoops!"<<std::endl;
                     createNewQVectors();
-//                    plateStretching();
-//                    calculateCoefficients();
-//                    AVXAll();
                     outputSumL = 0.0;
                     outputSumR = 0.0;
                     outputChannel2[i-1] = 0;

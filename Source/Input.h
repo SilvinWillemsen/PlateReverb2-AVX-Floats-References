@@ -65,9 +65,9 @@ public:
         broadcaster.setValue(1);
     }
     
-    LocationOnPlate getInputLocation() {return inputLocation;};
-    void setInputLocation (LocationOnPlate inputLocationToBeSet) {inputLocation = inputLocationToBeSet;};
-    Slider* getBroadcaster() {return &broadcaster;};
+    LocationOnPlate& getInputLocation() { return inputLocation; };
+    void setInputLocation (LocationOnPlate inputLocationToBeSet) { inputLocation = inputLocationToBeSet; };
+    Slider& getBroadcaster() { return broadcaster; };
     
 private:
     LocationOnPlate inputLocation;

@@ -31,7 +31,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
-    void setRedButtonOpacity(float value) {knobsArea.getRedButton() -> setOpacity(value);};
+    void setRedButtonOpacity(float value) {knobsArea.getRedButton().setOpacity(value);};
     
 private:
     void sliderValueChanged (Slider* slider) override;

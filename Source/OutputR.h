@@ -66,9 +66,9 @@ public:
         broadcaster.setValue(1);
     }
     
-    LocationOnPlate getOutputRLocation() {return outputRLocation;};
-    void setOutputRLocation (LocationOnPlate outputRLocationToBeSet) {outputRLocation = outputRLocationToBeSet;};
-    Slider* getBroadcaster() {return &broadcaster;};
+    LocationOnPlate& getOutputRLocation() { return outputRLocation; };
+    void setOutputRLocation (LocationOnPlate outputRLocationToBeSet) { outputRLocation = outputRLocationToBeSet; };
+    Slider& getBroadcaster() { return broadcaster; };
     
 private:
     LocationOnPlate outputRLocation;
