@@ -27,9 +27,9 @@ public:
     void setHorizontalModes(std::vector<int> horizontalModesToBeSet) {horizontalModes = horizontalModesToBeSet;};
     void setVerticalModes(std::vector<int> verticalModesToBeSet) {verticalModes = verticalModesToBeSet;};
 
-    std::vector<float> getEigenFrequencies() {return eigenFrequencies;};
-    std::vector<int> getHorizontalModes() {return horizontalModes;};
-    std::vector<int> getVerticalModes() {return verticalModes;};
+    std::vector<float>& getEigenFrequencies() {return eigenFrequencies;};
+    std::vector<int>& getHorizontalModes() {return horizontalModes;};
+    std::vector<int>& getVerticalModes() {return verticalModes;};
     
 private:
     std::vector<float> eigenFrequencies;
@@ -67,11 +67,11 @@ public:
     
     ~LocationOnPlate() {};
     
-    double getX() {return x;}
-    double getY() {return y;}
-    void setX (double v) {x = v;}
-    void setY (double w) {y = w;}
-    void setLocation (double v, double w) {x = v; y = w;};
+    double getX() { return x; }
+    double getY() { return y; }
+    void setX (double v) { x = v; }
+    void setY (double w) { y = w; }
+    void setLocation (double v, double w) { x = v; y = w; };
     
     
 private:

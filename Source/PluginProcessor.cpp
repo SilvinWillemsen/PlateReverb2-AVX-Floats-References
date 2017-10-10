@@ -136,6 +136,8 @@ void PlateReverb2AudioProcessor::calculateAndSortOmegaMatrix()
     */
     
     int i = 0;
+    
+    
     while (i != tempEigenFrequencies.size())
     {
         if (tempEigenFrequencies[i] < tempEigenFrequencies[i-1])
@@ -145,19 +147,18 @@ void PlateReverb2AudioProcessor::calculateAndSortOmegaMatrix()
             {
                 ++index;
             }
-            tempEigenFrequencies.insert (tempEigenFrequencies.begin()+index, tempEigenFrequencies[i]);
-            tempHorizontalModes.insert (tempHorizontalModes.begin()+index, tempHorizontalModes[i]);
-            tempVerticalModes.insert (tempVerticalModes.begin()+index, tempVerticalModes[i]);
+            tempEigenFrequencies.insert (tempEigenFrequencies.begin() + index, tempEigenFrequencies[i]);
+            tempHorizontalModes.insert (tempHorizontalModes.begin() + index, tempHorizontalModes[i]);
+            tempVerticalModes.insert (tempVerticalModes.begin() + index, tempVerticalModes[i]);
             tempEigenFrequencies.erase (tempEigenFrequencies.begin() + i + 1);
             tempHorizontalModes.erase (tempHorizontalModes.begin() + i + 1);
             tempVerticalModes.erase (tempVerticalModes.begin() + i + 1);
         }
         ++i;
     }
-    
-    sortedOmegaMatrix.setEigenFrequencies (tempEigenFrequencies);
-    sortedOmegaMatrix.setHorizontalModes (tempHorizontalModes);
-    sortedOmegaMatrix.setVerticalModes (tempVerticalModes);
+    sortedOmegaMatrix.setEigenFrequencies (std::move (tempEigenFrequencies));
+    sortedOmegaMatrix.setHorizontalModes (std::move (tempHorizontalModes));
+    sortedOmegaMatrix.setVerticalModes (std::move (tempVerticalModes));
     
 }
 
@@ -176,7 +177,7 @@ void PlateReverb2AudioProcessor::deleteCents ()
     const std::vector<float>& eigenFrequenciesPre (sortedOmegaMatrix.getEigenFrequencies());
     const std::vector<int>& horizontalModesPre (sortedOmegaMatrix.getHorizontalModes());
     const std::vector<int>& verticalModesPre (sortedOmegaMatrix.getVerticalModes());
-
+    
     vectorLength = eigenFrequenciesPre.size();
     
     eigenFrequencies.clear();
@@ -243,19 +244,16 @@ void PlateReverb2AudioProcessor::calculatePhi()
 
 void PlateReverb2AudioProcessor::calculateCoefficients()
 {
-    double cm = 12.0 * (log (10.0) / decay);
-    
-    double factorA;
-    double factorB;
-    double factorC;
-    double factorIn;
-    
     factorBdA.clear();
     factorCdA.clear();
     factorIndA.clear();
     
-    factorA = 1.0 / pow (k, 2) + cm / (rho * h * k);
-    factorC = cm / (rho * h * k) - 1.0 / pow (k, 2);
+    const double cm = 12.0 * (log (10.0) / decay);
+    const double factorA = 1.0 / pow (k, 2) + cm / (rho * h * k);
+    const double factorC = cm / (rho * h * k) - 1.0 / pow (k, 2);
+    
+    double factorB;
+    double factorIn;
     
     for (int m = 0; m < vectorLength; ++m)
     {
