@@ -36,8 +36,6 @@ public:
 private:
     void sliderValueChanged (Slider* slider) override;
     void buttonClicked (Button* button) override;
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
     PlateReverb2AudioProcessor& processor;
     PlateArea plateArea;
     KnobsArea knobsArea;

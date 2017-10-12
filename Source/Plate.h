@@ -40,7 +40,6 @@ public:
         addAndMakeVisible (outputR);
         
         plateResizer.setParent(this);
-        addChildComponent (plateResizer);
         addAndMakeVisible (plateResizer);
     }
 
@@ -139,16 +138,16 @@ public:
     OutputL& getOutputL() {return outputL;};
     OutputR& getOutputR() {return outputR;};
     FlangeCurve& getFlangeCurve() {return flangeCurve;};
-        
+    
 private:
     Slider widthControl;
     Slider heightControl;
     Input input;
     OutputL outputL;
     OutputR outputR;
-    PlateResizer plateResizer;
     FlangeCurve flangeCurve;
     CBC cbc;
+    PlateResizer plateResizer;
     Rectangle<int> plateBounds;
             
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plate)

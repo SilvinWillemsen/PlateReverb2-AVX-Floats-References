@@ -229,25 +229,20 @@ public:
         float halfArea = getWidth() / 2.0;
         auto knobsAreaArea = getLocalBounds();
         knobsAreaArea.removeFromTop(10.0f);
-        auto topKnobsArea = knobsAreaArea.removeFromTop(95.0f);
+        auto topKnobsArea = knobsAreaArea.removeFromTop(100.0f);
 
         generalKnobsLabel.setBounds (topKnobsArea.removeFromTop (20.0f));
         
         topKnobsArea.removeFromTop(10.0f);
         auto topLeftKnobsArea = topKnobsArea.removeFromLeft(halfArea);
         
-        volumeControl.setBounds (topLeftKnobsArea.removeFromTop (45.0f).reduced (2.0f));
+        volumeControl.setBounds (topLeftKnobsArea.removeFromTop (45.0f));
         volumeLabel.setBounds (topLeftKnobsArea);
         
-        decayControl.setBounds (topKnobsArea.removeFromTop (45.0f).reduced (2.0f));
+        decayControl.setBounds (topKnobsArea.removeFromTop (45.0f));
         decayLabel.setBounds (topKnobsArea);
-
-        auto bottomKnobsArea = knobsAreaArea.removeFromTop(65.0f);
-        redButton.setBounds (bottomKnobsArea.removeFromTop (45.0f).reduced (5.0f));
-//        centsControl.setBounds (bottomKnobsArea.removeFromTop (45.0f).reduced (2.0f));
-//        centsLabel.setBounds (bottomKnobsArea);
         
-        auto flangingArea (knobsAreaArea.removeFromBottom(270.0f));
+        auto flangingArea (knobsAreaArea.removeFromBottom(350.0f));
         flangingLabel.setBounds (flangingArea.removeFromTop (20.0f));
         
         auto flangingButtonsArea (flangingArea.removeFromTop (30.0f));
@@ -257,7 +252,7 @@ public:
         flangeButtonR.setBounds (flangingButtonsArea.reduced (5.0f));
         flangeButtonR.setColour (TextButton::buttonColourId, Colours::red);
 
-        auto radiusArea (flangingArea.removeFromTop (60.0f));
+        auto radiusArea (flangingArea.removeFromTop (80.0f));
         radiusLabel.setBounds(radiusArea.removeFromTop(20.0f));
         
         auto radiusAreaLeft1 (radiusArea.removeFromLeft (halfArea / 2.0f));
@@ -275,7 +270,7 @@ public:
         radiusRYLabel.setBounds(radiusArea.removeFromTop (20.0f));
         radiusRY.setBounds (radiusArea);
         
-        auto speedArea (flangingArea.removeFromTop (60.0f));
+        auto speedArea (flangingArea.removeFromTop (80.0f));
         speedLabel.setBounds(speedArea.removeFromTop(20.0f));
         
         auto speedAreaLeft1 (speedArea.removeFromLeft (halfArea / 2.0f));
@@ -293,7 +288,7 @@ public:
         speedRYLabel.setBounds(speedArea.removeFromTop (20.0f));
         speedRY.setBounds (speedArea);
         
-        auto phaseArea (flangingArea.removeFromTop (60.0f));
+        auto phaseArea (flangingArea.removeFromTop (80.0f));
         phaseLabel.setBounds(phaseArea.removeFromTop(20.0f));
         
         auto phaseAreaLeft1 (phaseArea.removeFromLeft (halfArea / 2.0f));
