@@ -287,7 +287,7 @@ void PlateReverb2AudioProcessor::calculateCoefficients()
             coefCdA[m] = 0;
             ++i;
         } else {
-            coefB = 2.0/ pow (k, 2) - pow (eigenFrequencies[m], 2);
+            coefB = 2.0 / pow (k, 2) - pow (eigenFrequencies[m], 2);
             coefIn = phiIn[m] / (rho * h);
             coefIndA[m] = static_cast<float> (coefIn / coefA);
             coefBdA[m] = static_cast<float> (coefB / coefA);
@@ -343,12 +343,14 @@ void PlateReverb2AudioProcessor::plateStretching()
     
     const double lossCoef = 12.0 * (log (10.0) / decay);
     const double coefA = 1.0 / pow(k, 2) + lossCoef / (rho * h * k);
+    const double coefC = lossCoef / (rho * h * k) - 1.0 / pow (k, 2);
     
     double coefB;
     double coefIn;
     double omega = 0.0;
     
     float* coefBdAPtr = (float*)&__coefBdA[0];
+    float* coefCdAPtr = (float*)&__coefCdA[0];
     float* coefIndAPtr = (float*)&__coefIndA[0];
     
     for (int m = 0; m < vectorLength; ++m)
@@ -356,21 +358,30 @@ void PlateReverb2AudioProcessor::plateStretching()
         omega = (pow ((horizontalModes[m] / Lx), 2) + pow ((verticalModes[m] / Ly), 2)) * pow (kSq, 0.5) * pow(double_Pi, 2); //calculate eigenfrequency
         if (omega < fs * 2) //if the eigenfrequency is stable, calculate coefBdA normally
         {
+            eigenFrequencies[m] = omega;
             coefB = 2.0 / pow(k, 2) - pow (omega, 2);
-            coefBdA[m] = (static_cast<float> (coefB / coefA));
-            coefBdAPtr[m] = coefBdA[m]; //insert directly into AVX variable
-
             coefIn = phiIn[m] / (rho * h);
+            
+            coefBdA[m] = (static_cast<float> (coefB / coefA));
+            coefCdA[m] = static_cast<float> (coefC / coefA);
             coefIndA[m] = static_cast<float> (coefIn / coefA);
-            coefIndAPtr[m] = coefIndA[m]; //insert directly into AVX variable
+            
+            //insert directly into AVX variables
+            coefBdAPtr[m] = coefBdA[m];
+            coefCdAPtr[m] = coefCdA[m];
+            coefIndAPtr[m] = coefIndA[m];
 
         } else { //save the index of the unstable eigenfrequency
+            eigenFrequencies[m] = 0;
+            
             coefBdA[m] = 0;
             coefBdAPtr[m] = 0;
             
+            coefCdA[m] = 0;
+            coefCdAPtr[m] = 0;
+            
             coefIndA[m] = 0;
             coefIndAPtr[m] = 0;
-            
             unstableEigenFrequencies.push_back(m);
         }
         
@@ -391,6 +402,57 @@ void PlateReverb2AudioProcessor::plateStretching()
         qNowPtr[unstableEigenFrequencies[m]] = 0;
     }
 
+}
+
+
+void PlateReverb2AudioProcessor::decayChange()
+{
+    //calculate loss coefficient and coefficients A and C
+    const double lossCoef = 12.0 * (log (10.0) / decay);
+    const double coefA = 1.0 / pow (k, 2) + lossCoef / (rho * h * k);
+    const double coefC = lossCoef / (rho * h * k) - 1.0 / pow (k, 2);
+    
+    double coefB;
+    double coefIn;
+    
+    //if there are no unstable eigenfrequencies, insert an unused index to make the unstableEigenFrequencies vector non-zero
+    if (unstableEigenFrequencies.size() == 0)
+    {
+        unstableEigenFrequencies = { static_cast<int>(vectorLength + AVXZeros + 1) };
+    }
+    
+    float* coefBdAPtr = (float*)&__coefBdA[0];
+    float* coefCdAPtr = (float*)&__coefCdA[0];
+    float* coefIndAPtr = (float*)&__coefIndA[0];
+    
+    int i = 0;
+    for (int m = 0; m < vectorLength; ++m)
+    {
+        if (m == unstableEigenFrequencies[i])
+        {
+            coefBdA[m] = 0;
+            coefCdA[m] = 0;
+            coefIndA[m] = 0;
+            
+            coefBdAPtr[m] = 0;
+            coefCdAPtr[m] = 0;
+            coefIndAPtr[m] = 0;
+            
+            ++i;
+        } else {
+            coefB = 2.0 / pow (k, 2) - pow (eigenFrequencies[m], 2);
+            coefIn = phiIn[m] / (rho * h);
+            
+            coefIndA[m] = static_cast<float> (coefIn / coefA);
+            coefBdA[m] = static_cast<float> (coefB / coefA);
+            coefCdA[m] = static_cast<float> (coefC / coefA);
+            
+            coefIndAPtr[m] = coefIndA[m];
+            coefBdAPtr[m] = coefBdA[m];
+            coefCdAPtr[m] = coefCdA[m];
+        }
+    }
+    
 }
 
 /*
@@ -664,12 +726,11 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
         outputRChange = false;
     }
     
-//    if (decayFlag == true)
-//    {
-//        calculateCoefficients();
-//
-//        decayFlag = false;
-//    }
+    if (decayFlag == true)
+    {
+        decayChange();
+        decayFlag = false;
+    }
 
     if (stretchFlag == true)
     {
@@ -767,6 +828,7 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
                 if (std::abs (outputSumL * 1500.0 * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0) > 4.0
                     || std::abs (outputSumR * 1500.0 * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0) > 4.0){
                     std::cout<<"Whoops!"<<std::endl;
+                    
                     createNewQVectors();
                     outputSumL = 0.0;
                     outputSumR = 0.0;

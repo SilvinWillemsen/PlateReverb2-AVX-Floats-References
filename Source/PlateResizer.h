@@ -12,19 +12,13 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CBC.h"
-#include "ElementOnPlate.h"
-//==============================================================================
+//=============================================================================
 /*
 */
 class PlateResizer    : public ResizableCornerComponent
 {
 public:
-    PlateResizer() : ResizableCornerComponent(this, &cbc)
-    {
-        
-    }
-    
-    PlateResizer(Component* parComp) : ResizableCornerComponent(parComp, &cbc)
+    PlateResizer() : ResizableCornerComponent(&parComp, &cbc)
     {
         
     }
@@ -62,6 +56,6 @@ public:
 
 private:
     CBC cbc;
-    Component* parComp;
+    Component parComp;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlateResizer)
 };

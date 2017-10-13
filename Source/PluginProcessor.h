@@ -153,6 +153,7 @@ public:
     void calculatePhi();
     void calculateCoefficients();
     void plateStretching();
+    void decayChange();
     
     void AVXAll();
     void calculatePhiOutL();

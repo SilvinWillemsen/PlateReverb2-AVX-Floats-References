@@ -11,7 +11,6 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "RedButton.h"
 
 //==============================================================================
 /*
@@ -50,8 +49,6 @@ public:
         centsControl.setTextBoxStyle (Slider::NoTextBox, false, 90, 0);
         //centsControl.setPopupDisplayEnabled (true, this);
         //addAndMakeVisible (&centsControl);
-        
-        addAndMakeVisible (&redButton);
         
         decayLabel.setText ("Decay", NotificationType::dontSendNotification);
         decayLabel.setJustificationType (Justification::centred);
@@ -339,8 +336,6 @@ public:
     
     TextButton& getRecalculateL() { return recalculateL; };
     TextButton& getRecalculateR() { return recalculateR; };
-    
-    RedButton& getRedButton() { return redButton; };
 
 private:
     Slider volumeControl;
@@ -390,8 +385,6 @@ private:
     
     TextButton recalculateL;
     TextButton recalculateR;
-    
-    RedButton redButton;
-    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KnobsArea)
 };

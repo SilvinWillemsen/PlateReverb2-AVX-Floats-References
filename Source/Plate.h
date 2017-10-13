@@ -15,7 +15,6 @@
 #include "Input.h"
 #include "OutputL.h"
 #include "OutputR.h"
-#include "ElementOnPlate.h"
 #include "PlateResizer.h"
 #include "FlangeCurve.h"
 
@@ -38,7 +37,6 @@ public:
         addAndMakeVisible (input);
         addAndMakeVisible (outputL);
         addAndMakeVisible (outputR);
-        
         plateResizer.setParent(this);
         addAndMakeVisible (plateResizer);
     }

@@ -13,18 +13,13 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.1.2">
   <MAINGROUP id="TmUE3W" name="PlateReverb2">
     <GROUP id="{0486E30D-3E49-6B68-C729-C192E23971C5}" name="Source">
-      <FILE id="q5pDmR" name="RedButton.h" compile="0" resource="0" file="Source/RedButton.h"/>
-      <FILE id="wUJ4qY" name="ElementOnPlate.h" compile="0" resource="0"
-            file="Source/ElementOnPlate.h"/>
       <FILE id="kfEYwY" name="KnobsArea.h" compile="0" resource="0" file="Source/KnobsArea.h"/>
       <FILE id="eCdtN9" name="FlangeCurve.h" compile="0" resource="0" file="Source/FlangeCurve.h"/>
       <FILE id="WVqEez" name="OutputR.h" compile="0" resource="0" file="Source/OutputR.h"/>
       <FILE id="BKKUjT" name="OutputL.h" compile="0" resource="0" file="Source/OutputL.h"/>
-      <FILE id="LqFXqT" name="Edges.h" compile="0" resource="0" file="Source/Edges.h"/>
       <FILE id="qbxO7f" name="Input.h" compile="0" resource="0" file="Source/Input.h"/>
       <FILE id="HyVNKz" name="CBC.h" compile="0" resource="0" file="Source/CBC.h"/>
       <FILE id="OnypTH" name="PlateResizer.h" compile="0" resource="0" file="Source/PlateResizer.h"/>
-      <FILE id="fDLJel" name="PlateCorner.h" compile="0" resource="0" file="Source/PlateCorner.h"/>
       <FILE id="ErRfR6" name="Plate.h" compile="0" resource="0" file="Source/Plate.h"/>
       <FILE id="U4rM9c" name="PlateArea.h" compile="0" resource="0" file="Source/PlateArea.h"/>
       <FILE id="jZ1AB2" name="PluginProcessor.cpp" compile="1" resource="0"
