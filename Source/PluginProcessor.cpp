@@ -696,43 +696,43 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
      ==============================================================================
     */
     
-    if (recalculateLFlag == true)
+    if (recalculateLFlag)
     {
         setFlangingL();
         recalculateLFlag = false;
     }
     
-    if (recalculateRFlag == true)
+    if (recalculateRFlag)
     {
         setFlangingR();
         recalculateRFlag = false;
     }
     
-    if (inputChange == true)
+    if (inputChange)
     {
         calculateCoefIndA();
         inputChange = false;
     }
     
-    if (outputLChange == true)
+    if (outputLChange)
     {
         calculatePhiOutL();
         outputLChange = false;
     }
     
-    if (outputRChange == true)
+    if (outputRChange)
     {
         calculatePhiOutR();
         outputRChange = false;
     }
     
-    if (decayFlag == true)
+    if (decayFlag)
     {
         decayChange();
         decayFlag = false;
     }
 
-    if (stretchFlag == true)
+    if (stretchFlag)
     {
         plateStretching();
         stretchFlag = false;
@@ -741,24 +741,24 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
     int posUseL;
     int posUseR;
 
-    float outputSumL = 0.0;
-    float outputSumR = 0.0;
+    float outputSumL;
+    float outputSumR;
     
-    for (int channel = 0; channel < totalNumOutputChannels; ++channel)
+    for (int channel = 0; channel < totalNumOutputChannels; ++channel) //for all channels do...
     {
         float* outputData = buffer.getWritePointer (channel);
-        for (int i = 0; i < numSamples; ++i)
+        for (int i = 0; i < numSamples; ++i) //for all samples in the buffer do...
         {
             outputSumL = 0.0;
             outputSumR = 0.0;
             
-            if (flangingL == true)
+            if (flangingL) //if the left microphone is moving do...
             {
                 posUseL = (static_cast<int> (pos / (2 * fs / __phiOutLFlange.size())) % static_cast<int> (__phiOutLFlange.size()));
                 
             }
             
-            if (flangingR == true)
+            if (flangingR)
             {
                 posUseR = (static_cast<int> (pos / (2 * fs / __phiOutRFlange.size())) % static_cast<int> (__phiOutRFlange.size()));
             }
@@ -773,12 +773,12 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
             
             if (channel == 0)
             {
-                if (flangingL == true)
+                if (flangingL)
                 {
                     __phiOutLFlangeUse = __phiOutLFlange[posUseL];
                 }
                 
-                if (flangingR == true)
+                if (flangingR)
                 {
                     __phiOutRFlangeUse = __phiOutRFlange[posUseR];
                 }
@@ -791,14 +791,14 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
                     __qNext[m] = _mm256_add_ps (_mm256_add_ps (_mm256_mul_ps (__coefBdA[m], __qNow[m]),
                                                                _mm256_mul_ps (__coefCdA[m], __qPrev[m])),
                                                 _mm256_mul_ps (__coefIndA[m], __inputUse));
-                    if (flangingL == true)
+                    if (flangingL)
                     {
                         __resultL[m] = _mm256_mul_ps (__qNext[m], __phiOutLFlangeUse[m]);
                     } else {
                         __resultL[m] = _mm256_mul_ps (__qNext[m], __phiOutL[m]);
                     }
                     
-                    if (flangingR == true)
+                    if (flangingR)
                     {
                         __resultR[m] = _mm256_mul_ps (__qNext[m], __phiOutRFlangeUse[m]);
                     } else {
@@ -824,15 +824,11 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
                 outputData[i] = (outputSumL * 1500.0) * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0;
                 outputChannel2.push_back ((outputSumR * 1500.0) * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0);
                 
-                //if the output becomes too loud reset QVectors
+                //if the output becomes too loud
                 if (std::abs (outputSumL * 1500.0 * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0) > 4.0
                     || std::abs (outputSumR * 1500.0 * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0) > 4.0){
                     std::cout<<"Whoops!"<<std::endl;
-                    
-                    createNewQVectors();
-                    outputSumL = 0.0;
-                    outputSumR = 0.0;
-                    outputChannel2[i-1] = 0;
+
                 }
                 
             } else {

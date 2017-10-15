@@ -31,8 +31,6 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     
-    void setRedButtonOpacity (float value);
-    
 private:
     void sliderValueChanged (Slider* slider) override;
     void buttonClicked (Button* button) override;

@@ -83,7 +83,7 @@ void PlateReverb2AudioProcessorEditor::buttonClicked (Button* button)
 {
     if (button == &knobsArea.getFlangeButtonL())
     {
-        if (plateArea.getPlate().getFlangeCurve().getActiveL() == true)
+        if (plateArea.getPlate().getFlangeCurve().getActiveL())
         {
             knobsArea.getFlangeButtonL().setColour(TextButton::buttonColourId, Colours::red);
             plateArea.getPlate().getOutputL().setVisible (true);
@@ -105,7 +105,7 @@ void PlateReverb2AudioProcessorEditor::buttonClicked (Button* button)
     
     if (button == &knobsArea.getFlangeButtonR())
     {
-        if (plateArea.getPlate().getFlangeCurve().getActiveR() == true)
+        if (plateArea.getPlate().getFlangeCurve().getActiveR())
         {
             knobsArea.getFlangeButtonR().setColour(TextButton::buttonColourId, Colours::red);
             plateArea.getPlate().getOutputR().setVisible (true);
@@ -248,19 +248,19 @@ void PlateReverb2AudioProcessorEditor::sliderValueChanged (Slider* slider)
     
     if (slider == &plateArea.getPlate().getInput().getBroadcaster())
     {
-        processor.positions.setInput(plateArea.getPlate().getInput().getInputLocation());
+        processor.positions.setInput(plateArea.getPlate().getInput().getLocation());
         processor.inputChange = true;
     }
     
     if (slider == &plateArea.getPlate().getOutputL().getBroadcaster())
     {
-        processor.positions.setOutputL(plateArea.getPlate().getOutputL().getOutputLLocation());
+        processor.positions.setOutputL(plateArea.getPlate().getOutputL().getLocation());
         processor.outputLChange = true;
     }
     
     if (slider == &plateArea.getPlate().getOutputR().getBroadcaster())
     { 
-        processor.positions.setOutputR(plateArea.getPlate().getOutputR().getOutputRLocation());
+        processor.positions.setOutputR(plateArea.getPlate().getOutputR().getLocation());
         processor.outputRChange = true;
     }
     

@@ -12,9 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "CBC.h"
-#include "Input.h"
-#include "OutputL.h"
-#include "OutputR.h"
+#include "ElementOnPlate.h"
 #include "PlateResizer.h"
 #include "FlangeCurve.h"
 
@@ -30,15 +28,14 @@ public:
     Plate()
     {
         PlatePositions positions;
-        input.setInputLocation (positions.getInput());
-        outputL.setOutputLLocation (positions.getOutputL());
-        outputR.setOutputRLocation (positions.getOutputR());
-        addAndMakeVisible (flangeCurve);
-        addAndMakeVisible (input);
-        addAndMakeVisible (outputL);
-        addAndMakeVisible (outputR);
-        plateResizer.setParent(this);
-        addAndMakeVisible (plateResizer);
+        input.setLocation (positions.getInput());
+        outputL.setLocation (positions.getOutputL());
+        outputR.setLocation (positions.getOutputR());
+        addAndMakeVisible (&flangeCurve);
+        addAndMakeVisible (&input);
+        addAndMakeVisible (&outputL);
+        addAndMakeVisible (&outputR);
+        addAndMakeVisible (&plateResizer);
     }
 
     ~Plate()
@@ -70,20 +67,18 @@ public:
         g.setGradientFill (topLeft);
         g.fillRect (0, 0, 5, 5);
         
-        ColourGradient topRight (Colours::lightgrey, getWidth()-5, 5, Colours::black, getWidth()-5+gradientVar, 5-gradientVar, true);
+        ColourGradient topRight (Colours::lightgrey, getWidth() - 5, 5, Colours::black, getWidth() - 5 + gradientVar, 5 - gradientVar, true);
         g.setGradientFill (topRight);
-        g.fillRect (getWidth()-5, 0, getWidth(), 5);
+        g.fillRect (getWidth() - 5, 0, getWidth(), 5);
 
         ColourGradient bottomRight (Colours::lightgrey, getWidth() - 5, getHeight() - 5,
                                     Colours::black, getWidth() - 5 + gradientVar, getHeight() - 5 + gradientVar, true);
         g.setGradientFill (bottomRight);
         g.fillRect (getWidth() - 5, getHeight() - 5, getWidth(), getHeight());
         
-        ColourGradient bottomLeft (Colours::lightgrey, 5, getHeight() - 5,
-                                   Colours::black, 5 - gradientVar, getHeight() - 5 + gradientVar, true);
+        ColourGradient bottomLeft (Colours::lightgrey, 5, getHeight() - 5, Colours::black, 5 - gradientVar, getHeight() - 5 + gradientVar, true);
         g.setGradientFill(bottomLeft);
-        g.fillRect (0, getHeight() - 5,
-                    5, getHeight());
+        g.fillRect (0, getHeight() - 5, 5, getHeight());
         
         ColourGradient colourGradient (Colours::white, widthControl.getValue() * 100, 0,
                                        Colours::darkgrey, widthControl.getValue() * 100, 400, true);
@@ -91,25 +86,21 @@ public:
         
         g.fillRect (plateBounds);
         
+        //Make plate dimensions visible including a maximum of two decimal places;
         std::ostringstream widthString;
         std::ostringstream heightString;
         
         if (getLocalBounds().getWidth() < 200.0)
-        {
             (widthString << std::setprecision (2) << getWidth() / 200.0);
-        } else {
+        else
             (widthString << std::setprecision (3) << getWidth() / 200.0);
-        }
         
         if (getLocalBounds().getHeight() < 200.0)
-        {
             (heightString << std::setprecision (2) << getHeight() / 200.0);
-        } else {
+        else
             (heightString << std::setprecision (3) << getHeight() / 200.0);
-        }
-            
+        
         String currentSizeAsString = widthString.str() + " x " + heightString.str() + " m";
-
         g.setColour (Colours::white);
         Font helv;
         helv.setTypefaceName("Helvetica");
@@ -123,29 +114,29 @@ public:
         heightControl.setValue(getHeight() / 200.0);
         plateBounds.setBounds(getX() - 5, getY() - 5, getWidth() - 10, getHeight() - 10);
         plateResizer.setBounds(getWidth() - 10, getHeight() - 10, 10, 10);
-        input.setBounds(input.getInputLocation().getX() * getWidth() - 5, input.getInputLocation().getY() * getHeight() - 5, 10, 10);
-        outputL.setBounds(outputL.getOutputLLocation().getX() * getWidth() - 5, outputL.getOutputLLocation().getY() * getHeight() - 5, 10, 10);
-        outputR.setBounds(outputR.getOutputRLocation().getX() * getWidth() - 5, outputR.getOutputRLocation().getY() * getHeight() - 5, 10, 10);
+        input.setBounds(input.getLocation().getX() * getWidth() - 5, input.getLocation().getY() * getHeight() - 5, 10, 10);
+        outputL.setBounds(outputL.getLocation().getX() * getWidth() - 5, outputL.getLocation().getY() * getHeight() - 5, 10, 10);
+        outputR.setBounds(outputR.getLocation().getX() * getWidth() - 5, outputR.getLocation().getY() * getHeight() - 5, 10, 10);
         flangeCurve.setBounds(plateBounds);
     }
 
-    Slider& getWidthControl() {return widthControl;};
-    Slider& getHeightControl() {return heightControl;};
+    Slider& getWidthControl() { return widthControl; };
+    Slider& getHeightControl() { return heightControl; };
             
-    Input& getInput() {return input;};
-    OutputL& getOutputL() {return outputL;};
-    OutputR& getOutputR() {return outputR;};
-    FlangeCurve& getFlangeCurve() {return flangeCurve;};
+    ElementOnPlate& getInput() { return input; };
+    ElementOnPlate& getOutputL() { return outputL; };
+    ElementOnPlate& getOutputR() { return outputR; };
+    FlangeCurve& getFlangeCurve() { return flangeCurve; };
     
 private:
     Slider widthControl;
     Slider heightControl;
-    Input input;
-    OutputL outputL;
-    OutputR outputR;
+    ElementOnPlate input { Colours::lightgreen };
+    ElementOnPlate outputL { Colours::white };
+    ElementOnPlate outputR { Colours::red };
     FlangeCurve flangeCurve;
     CBC cbc;
-    PlateResizer plateResizer;
+    PlateResizer plateResizer { this };
     Rectangle<int> plateBounds;
             
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plate)

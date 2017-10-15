@@ -20,8 +20,6 @@ class FlangeCurve    : public Component
 public:
     FlangeCurve()
     {
-        // In your constructor, you should add any child components, and
-        // initialise any special settings that your component needs.
     }
 
     ~FlangeCurve()
@@ -34,7 +32,7 @@ public:
         g.setOpacity (0.5);
         const float detail (1000.0);
         
-        if (getActiveL() == true)
+        if (activeL) //if the left microphone is moving, draw its path according to the UI controls
         {
             Path wavePathL;
             wavePathL.startNewSubPath (getWidth() * (radiusLX * sin (phaseLX) + 0.5), getHeight() * (radiusLY * sin (phaseLY) + 0.5));
@@ -51,7 +49,7 @@ public:
             g.strokePath (wavePathL, PathStrokeType (4.5f));
         }
         
-        if (activeR == true)
+        if (activeR) //if the left microphone is moving, draw its path according to the UI controls
         {
             Path wavePathR;
             wavePathR.startNewSubPath (getWidth() * (radiusRX * sin (phaseRX) + 0.5), getHeight() * (radiusRY * sin (phaseRY) + 0.5));
@@ -72,44 +70,41 @@ public:
 
     void resized() override
     {
-        // This method is where you should set the bounds of any child
-        // components that your component contains..
-
     }
     
-    inline void setActiveL (bool active) { activeL = active; };
-    inline void setActiveR (bool active) { activeR = active; };
+    void setActiveL (bool active) { activeL = active; };
+    void setActiveR (bool active) { activeR = active; };
     
-    inline void setRadiusLX (float radius) { radiusLX = radius; };
-    inline void setRadiusLY (float radius) { radiusLY = radius; };
-    inline void setSpeedLX (float speed) { speedLX = speed; };
-    inline void setSpeedLY (float speed) { speedLY = speed; };
-    inline void setPhaseLX (float phase) { phaseLX = phase; };
-    inline void setPhaseLY (float phase) { phaseLY = phase; };
+    void setRadiusLX (float radius) { radiusLX = radius; };
+    void setRadiusLY (float radius) { radiusLY = radius; };
+    void setSpeedLX (float speed) { speedLX = speed; };
+    void setSpeedLY (float speed) { speedLY = speed; };
+    void setPhaseLX (float phase) { phaseLX = phase; };
+    void setPhaseLY (float phase) { phaseLY = phase; };
     
-    inline void setRadiusRX (float radius) { radiusRX = radius; };
-    inline void setRadiusRY (float radius) { radiusRY = radius; };
-    inline void setSpeedRX (float speed) { speedRX = speed; };
-    inline void setSpeedRY (float speed) { speedRY = speed; };
-    inline void setPhaseRX (float phase) { phaseRX = phase; };
-    inline void setPhaseRY (float phase) { phaseRY = phase; };
+    void setRadiusRX (float radius) { radiusRX = radius; };
+    void setRadiusRY (float radius) { radiusRY = radius; };
+    void setSpeedRX (float speed) { speedRX = speed; };
+    void setSpeedRY (float speed) { speedRY = speed; };
+    void setPhaseRX (float phase) { phaseRX = phase; };
+    void setPhaseRY (float phase) { phaseRY = phase; };
     
-    inline bool getActiveL() { return activeL; };
-    inline bool getActiveR() { return activeR; };
+    bool getActiveL() { return activeL; };
+    bool getActiveR() { return activeR; };
     
-    inline float getRadiusLX() { return radiusLX; };
-    inline float getRadiusLY() { return radiusLY; };
-    inline float getSpeedLX() { return speedLX; };
-    inline float getSpeedLY() { return speedLY; };
-    inline float getPhaseLX() { return phaseLX; };
-    inline float getPhaseLY() { return phaseLY; };
+    float getRadiusLX() { return radiusLX; };
+    float getRadiusLY() { return radiusLY; };
+    float getSpeedLX() { return speedLX; };
+    float getSpeedLY() { return speedLY; };
+    float getPhaseLX() { return phaseLX; };
+    float getPhaseLY() { return phaseLY; };
     
-    inline float getRadiusRX() { return radiusRX; };
-    inline float getRadiusRY() { return radiusRY; };
-    inline float getSpeedRX() { return speedRX; };
-    inline float getSpeedRY() { return speedRY; };
-    inline float getPhaseRX() { return phaseRX; };
-    inline float getPhaseRY() { return phaseRY; };
+    float getRadiusRX() { return radiusRX; };
+    float getRadiusRY() { return radiusRY; };
+    float getSpeedRX() { return speedRX; };
+    float getSpeedRY() { return speedRY; };
+    float getPhaseRX() { return phaseRX; };
+    float getPhaseRY() { return phaseRY; };
 
 private:
     

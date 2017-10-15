@@ -20,6 +20,7 @@ class KnobsArea    : public Component
 public:
     KnobsArea()
     {
+        //Initialise all controls on the right side of the plugin
         Font bigFont (20.0f);
         
         generalKnobsLabel.setText ("General Settings", NotificationType::dontSendNotification);
@@ -38,17 +39,6 @@ public:
         volumeControl.setPopupDisplayEnabled(true, true, this);
         volumeControl.setTextValueSuffix (" %");
         addAndMakeVisible (&volumeControl);
-        
-        centsLabel.setText ("Quality - Performance", NotificationType::dontSendNotification);
-        centsLabel.setJustificationType (Justification::centred);
-        //addAndMakeVisible (&centsLabel);
-        
-        centsControl.setSliderStyle (Slider::RotaryVerticalDrag);
-        centsControl.setRange (1.0, 20.0, 0.01);
-        centsControl.setValue (10.0);
-        centsControl.setTextBoxStyle (Slider::NoTextBox, false, 90, 0);
-        //centsControl.setPopupDisplayEnabled (true, this);
-        //addAndMakeVisible (&centsControl);
         
         decayLabel.setText ("Decay", NotificationType::dontSendNotification);
         decayLabel.setJustificationType (Justification::centred);
@@ -223,6 +213,7 @@ public:
 
     void resized() override
     {
+        //Set all control sizes/positions
         float halfArea = getWidth() / 2.0;
         auto knobsAreaArea = getLocalBounds();
         knobsAreaArea.removeFromTop(10.0f);
