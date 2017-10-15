@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    CBC.h
-    Created: 26 Sep 2017 4:19:41pm
+    CBCInOuts.h
+    Created: 15 Oct 2017 4:36:04pm
     Author:  Silvin Willemsen
 
   ==============================================================================
@@ -15,19 +15,18 @@
 //==============================================================================
 /*
 */
-class CBC    : public ComponentBoundsConstrainer
+class CBCInOuts    : public ComponentBoundsConstrainer
 {
 public:
-    CBC()
+    CBCInOuts()
     {
-        setSizeLimits (200, 100, 600, 400);
+        setMinimumOnscreenAmounts(1000, 1000, 1000, 1000);
     }
 
-    ~CBC()
+    ~CBCInOuts()
     {
     }
 
 private:
-    
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CBC)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CBCInOuts)
 };

@@ -27,9 +27,9 @@ public:
     void setHorizontalModes(std::vector<int> horizontalModesToBeSet) {horizontalModes = horizontalModesToBeSet;};
     void setVerticalModes(std::vector<int> verticalModesToBeSet) {verticalModes = verticalModesToBeSet;};
 
-    std::vector<float> getEigenFrequencies() {return eigenFrequencies;};
-    std::vector<int> getHorizontalModes() {return horizontalModes;};
-    std::vector<int> getVerticalModes() {return verticalModes;};
+    std::vector<float>& getEigenFrequencies() {return eigenFrequencies;};
+    std::vector<int>& getHorizontalModes() {return horizontalModes;};
+    std::vector<int>& getVerticalModes() {return verticalModes;};
     
 private:
     std::vector<float> eigenFrequencies;
@@ -67,11 +67,11 @@ public:
     
     ~LocationOnPlate() {};
     
-    double getX() {return x;}
-    double getY() {return y;}
-    void setX (double v) {x = v;}
-    void setY (double w) {y = w;}
-    void setLocation (double v, double w) {x = v; y = w;};
+    double getX() { return x; }
+    double getY() { return y; }
+    void setX (double v) { x = v; }
+    void setY (double w) { y = w; }
+    void setLocation (double v, double w) { x = v; y = w; };
     
     
 private:
@@ -153,23 +153,16 @@ public:
     void calculatePhi();
     void calculateCoefficients();
     void plateStretching();
+    void decayChange();
     
     void AVXAll();
-    inline void AVXPhiOutL(int m, int n);
-    inline void AVXPhiOutR(int m, int n);
-    inline void AVXFactorBdA(int m, int n);
-    inline void AVXFactorCdA(int m, int n);
-    inline void AVXFactorIndA(int m, int n);
-    inline void AVXQPrev(std::vector<float> qPrev, int m, int n);
-    inline void AVXQNow(std::vector<float> qNow, int m, int n);
-
     void calculatePhiOutL();
     void calculatePhiOutR();
-    void calculateFactorIndA();
+    void calculateCoefIndA();
     
     void createNewQVectors();
-    void setFlanging (bool left);
-
+    void setFlangingL();
+    void setFlangingR();
     
     /*
      ==============================================================================
@@ -205,19 +198,22 @@ public:
     std::vector<float> phiOutL;
     std::vector<float> phiOutR;
     
-    std::vector<float> factorBdA;
-    std::vector<float> factorCdA;
-    std::vector<float> factorIndA;
+    std::vector<float> coefBdA;
+    std::vector<float> coefCdA;
+    std::vector<float> coefIndA;
     
     std::vector<__m256> __phiOutL;
     std::vector<__m256> __phiOutR;
     
-    std::vector<__m256> __factorBdA;
-    std::vector<__m256> __factorCdA;
-    std::vector<__m256> __factorIndA;
+    std::vector<__m256> __coefBdA;
+    std::vector<__m256> __coefCdA;
+    std::vector<__m256> __coefIndA;
     
+    const double detail = fs / 2.0;
     std::vector<std::vector<__m256>> __phiOutLFlange;
     std::vector<std::vector<__m256>> __phiOutRFlange;
+    std::vector<__m256> __phiOutLFlangeUse;
+    std::vector<__m256> __phiOutRFlangeUse;
     
     std::vector<__m256> __qNext;
     std::vector<__m256> __qNow;
@@ -225,23 +221,27 @@ public:
     std::vector<__m256> __resultL;
     std::vector<__m256> __resultR;
     
+    float* resultL = nullptr;
+    float* resultR = nullptr;
+    
     unsigned long vectorLength = 0;
     unsigned long AVXVectorLength = 0;
     unsigned long AVXVectorLengthPrev = 0;
     
-    std::vector<int> unstableModes;
+    std::vector<int> unstableEigenFrequencies;
     
-    int AVX = 8;
+    const bool AVXActive = true;
+    const int AVX = 8;
     int AVXZeros = 0;
     int AVXZerosPrev = 0;
     float inputUse = 0.0;
-
     
     /*
      ==============================================================================
         GUI Variables
      ==============================================================================
     */
+    
     double gain = 1.0;
     double Lx = 2.0;
     double Ly = 1.0;

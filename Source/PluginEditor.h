@@ -30,20 +30,14 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-
-    void setRedButtonOpacity(float value) {knobsArea.getRedButton().setOpacity(value);};
     
 private:
     void sliderValueChanged (Slider* slider) override;
     void buttonClicked (Button* button) override;
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
     PlateReverb2AudioProcessor& processor;
     PlateArea plateArea;
     KnobsArea knobsArea;
-    
 
-    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlateReverb2AudioProcessorEditor)
 };
 
