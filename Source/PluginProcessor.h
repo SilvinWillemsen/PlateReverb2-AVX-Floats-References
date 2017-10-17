@@ -278,7 +278,7 @@ public:
     double gain = 1.0;
     double Lx = 2.0;
     double Ly = 1.0;
-    double C = 5.0;
+    double C = 10.0;
     double decay = 4.0;
     
     double radiusLX = 0.4;

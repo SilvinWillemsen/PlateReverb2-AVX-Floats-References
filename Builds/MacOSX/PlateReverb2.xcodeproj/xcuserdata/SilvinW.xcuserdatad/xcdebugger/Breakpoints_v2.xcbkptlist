@@ -78,9 +78,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "773"
-            endingLineNumber = "773"
-            landmarkName = "PlateReverb2AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)"
-            landmarkType = "7">
+            endingLineNumber = "773">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -142,9 +140,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "200"
-            endingLineNumber = "200"
-            landmarkName = "PlateReverb2AudioProcessor::calculateAndSortOmegaMatrix()"
-            landmarkType = "7">
+            endingLineNumber = "200">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
