@@ -44,7 +44,7 @@ public:
 
     void paint (Graphics& g) override
     {
-
+        //Draw the plate edges
         ColourGradient leftEdge (Colours::black, 0, 0, Colours::lightgrey, 5, 0, false);
         g.setGradientFill (leftEdge);
         g.fillRect (0, 5, 5, getHeight() - 10);
@@ -61,6 +61,7 @@ public:
         g.setGradientFill (topEdge);
         g.fillRect (5, 0, getWidth()-10, 5);
         
+        //Draw the plate corners
         double gradientVar = sin (1.0 / 4.0 * double_Pi) * 5;
         
         ColourGradient topLeft (Colours::lightgrey, 5, 5, Colours::black, 5 - gradientVar, 5 - gradientVar, true);
@@ -80,10 +81,10 @@ public:
         g.setGradientFill(bottomLeft);
         g.fillRect (0, getHeight() - 5, 5, getHeight());
         
+        //draw the plate
         ColourGradient colourGradient (Colours::white, widthControl.getValue() * 100, 0,
                                        Colours::darkgrey, widthControl.getValue() * 100, 400, true);
         g.setGradientFill (colourGradient);
-        
         g.fillRect (plateBounds);
         
         //Make plate dimensions visible including a maximum of two decimal places;
@@ -110,13 +111,17 @@ public:
     
     void resized() override
     {
-        widthControl.setValue(getWidth() / 200.0);
-        heightControl.setValue(getHeight() / 200.0);
-        plateBounds.setBounds(getX() - 5, getY() - 5, getWidth() - 10, getHeight() - 10);
-        plateResizer.setBounds(getWidth() - 10, getHeight() - 10, 10, 10);
+        widthControl.setValue(getWidth() / 200.0);                                          //set width control value
+        heightControl.setValue(getHeight() / 200.0);                                        //set height control value
+        plateBounds.setBounds(getX() - 5, getY() - 5, getWidth() - 10, getHeight() - 10);   //change the plate size
+        plateResizer.setBounds(getWidth() - 10, getHeight() - 10, 10, 10);                  //move plate resizer
+        
+        //set in- and output positions relative to plate dimensions
         input.setBounds(input.getLocation().getX() * getWidth() - 5, input.getLocation().getY() * getHeight() - 5, 10, 10);
         outputL.setBounds(outputL.getLocation().getX() * getWidth() - 5, outputL.getLocation().getY() * getHeight() - 5, 10, 10);
         outputR.setBounds(outputR.getLocation().getX() * getWidth() - 5, outputR.getLocation().getY() * getHeight() - 5, 10, 10);
+        
+        //set the size of the moving microphonecurve relative to the plate dimensions
         flangeCurve.setBounds(plateBounds);
     }
 

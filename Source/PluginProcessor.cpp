@@ -79,6 +79,15 @@ const String PlateReverb2AudioProcessor::getProgramName (int index)
     return {};
 }
 
+void PlateReverb2AudioProcessor::useAVX()
+{
+#ifdef __AVX2__
+    AVX = true;
+#else
+    AVX = false;
+#endif
+}
+
 void PlateReverb2AudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
@@ -135,6 +144,9 @@ void quickSort(std::vector<float>& eigenFrequencies, std::vector<int>& horizonta
 
 void PlateReverb2AudioProcessor::calculateAndSortOmegaMatrix()
 {
+    Lx = 2;
+    Ly = 1;
+    
     std::vector<float> tempEigenFrequencies;
     std::vector<int> tempHorizontalModes;
     std::vector<int> tempVerticalModes;
@@ -306,8 +318,8 @@ void PlateReverb2AudioProcessor::calculateCoefficients()
 void PlateReverb2AudioProcessor::AVXAll(){
 
     //initialise AVX vectors
-    AVXZeros = ((AVX - (vectorLength % AVX)) % AVX);    //calculate how many zeros are needed for zeropadding
-    AVXVectorLength = (vectorLength + AVXZeros) / AVX;
+    AVXZeros = ((AVXSize - (vectorLength % AVXSize)) % AVXSize);    //calculate how many zeros are needed for zeropadding
+    AVXVectorLength = (vectorLength + AVXZeros) / AVXSize;
     __phiOutL = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
     __phiOutR = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
     __coefBdA = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
@@ -349,57 +361,71 @@ void PlateReverb2AudioProcessor::plateStretching()
     double coefIn;
     double omega = 0.0;
     
-    float* coefBdAPtr = (float*)&__coefBdA[0];
-    float* coefCdAPtr = (float*)&__coefCdA[0];
-    float* coefIndAPtr = (float*)&__coefIndA[0];
-    
-    for (int m = 0; m < vectorLength; ++m)
+    if (AVX) //if processor uses AVX-intrinsics do
     {
-        omega = (pow ((horizontalModes[m] / Lx), 2) + pow ((verticalModes[m] / Ly), 2)) * pow (kSq, 0.5) * pow(double_Pi, 2); //calculate eigenfrequency
-        if (omega < fs * 2) //if the eigenfrequency is stable, calculate coefBdA normally
+        float* coefBdAPtr = (float*)&__coefBdA[0];
+        float* coefCdAPtr = (float*)&__coefCdA[0];
+        float* coefIndAPtr = (float*)&__coefIndA[0];
+    
+        for (int m = 0; m < vectorLength; ++m)
         {
-            eigenFrequencies[m] = omega;
-            coefB = 2.0 / pow(k, 2) - pow (omega, 2);
-            coefIn = phiIn[m] / (rho * h);
-            
-            coefBdA[m] = (static_cast<float> (coefB / coefA));
-            coefCdA[m] = static_cast<float> (coefC / coefA);
-            coefIndA[m] = static_cast<float> (coefIn / coefA);
-            
-            //insert directly into AVX variables
-            coefBdAPtr[m] = coefBdA[m];
-            coefCdAPtr[m] = coefCdA[m];
-            coefIndAPtr[m] = coefIndA[m];
-
-        } else { //save the index of the unstable eigenfrequency
-            eigenFrequencies[m] = 0;
-            
-            coefBdA[m] = 0;
-            coefBdAPtr[m] = 0;
-            
-            coefCdA[m] = 0;
-            coefCdAPtr[m] = 0;
-            
-            coefIndA[m] = 0;
-            coefIndAPtr[m] = 0;
-            unstableEigenFrequencies.push_back(m);
+            omega = (pow ((horizontalModes[m] / Lx), 2) + pow ((verticalModes[m] / Ly), 2)) * pow (kSq, 0.5) * pow(double_Pi, 2); //calculate eigenfrequency
+            if (omega < fs * 2) //if the eigenfrequency is stable, calculate coefBdA normally
+            {
+                eigenFrequencies[m] = omega;
+                coefB = 2.0 / pow(k, 2) - pow (omega, 2);
+                coefIn = phiIn[m] / (rho * h);
+                
+                //insert directly into AVX variables
+                coefBdAPtr[m] = static_cast<float> (coefB / coefA);
+                coefCdAPtr[m] = static_cast<float> (coefC / coefA);
+                coefIndAPtr[m] = static_cast<float> (coefIn / coefA);
+                
+            } else { //save the index of the unstable eigenfrequency
+                eigenFrequencies[m] = 0;
+                coefBdAPtr[m] = 0;
+                coefCdAPtr[m] = 0;
+                coefIndAPtr[m] = 0;
+                unstableEigenFrequencies.push_back(m);
+            }
         }
         
+        //Make sure that the unstable modes have zero influence on the update equation
+        float* qPrevPtr = (float*)&__qPrev[0];
+        float* qNowPtr = (float*)&__qNow[0];
+        
+        for (int m = 0; m < unstableEigenFrequencies.size(); ++m)
+        {
+            qPrevPtr[unstableEigenFrequencies[m]] = 0;
+            qNowPtr[unstableEigenFrequencies[m]] = 0;
+        }
+        
+    } else {
+        for (int m = 0; m < vectorLength; ++m)
+        {
+            omega = (pow ((horizontalModes[m] / Lx), 2) + pow ((verticalModes[m] / Ly), 2)) * pow (kSq, 0.5) * pow(double_Pi, 2); //calculate eigenfrequency
+            if (omega < fs * 2) //if the eigenfrequency is stable, calculate coefBdA normally
+            {
+                eigenFrequencies[m] = omega;
+                coefB = 2.0 / pow(k, 2) - pow (omega, 2);
+                coefIn = phiIn[m] / (rho * h);
+                coefBdA[m] = static_cast<float> (coefB / coefA);
+                coefCdA[m] = static_cast<float> (coefC / coefA);
+                coefIndA[m] = static_cast<float> (coefIn / coefA);
+            } else {
+                eigenFrequencies[m] = 0;
+                coefBdA[m] = 0;
+                coefCdA[m] = 0;
+                coefIndA[m] = 0;
+                unstableEigenFrequencies.push_back(m);
+            }
+        }
     }
-    
-    /*
-     ==============================================================================
-        Make sure unstable modes have zero influence on the update equation
-     ==============================================================================
-    */
-    
-    float* qPrevPtr = (float*)&__qPrev[0];
-    float* qNowPtr = (float*)&__qNow[0];
     
     for (int m = 0; m < unstableEigenFrequencies.size(); ++m)
     {
-        qPrevPtr[unstableEigenFrequencies[m]] = 0;
-        qNowPtr[unstableEigenFrequencies[m]] = 0;
+        //qPrev[unstableEigenFrequencies[m]] = 0;
+        //qNow[unstableEigenFrequencies[m]] = 0;
     }
 
 }
@@ -421,38 +447,52 @@ void PlateReverb2AudioProcessor::decayChange()
         unstableEigenFrequencies = { static_cast<int>(vectorLength + AVXZeros + 1) };
     }
     
-    float* coefBdAPtr = (float*)&__coefBdA[0];
-    float* coefCdAPtr = (float*)&__coefCdA[0];
-    float* coefIndAPtr = (float*)&__coefIndA[0];
-    
-    int i = 0;
-    for (int m = 0; m < vectorLength; ++m)
+    if (AVX)
     {
-        if (m == unstableEigenFrequencies[i])
+    
+        float* coefBdAPtr = (float*)&__coefBdA[0];
+        float* coefCdAPtr = (float*)&__coefCdA[0];
+        float* coefIndAPtr = (float*)&__coefIndA[0];
+        
+        int i = 0;
+        for (int m = 0; m < vectorLength; ++m)
         {
-            coefBdA[m] = 0;
-            coefCdA[m] = 0;
-            coefIndA[m] = 0;
-            
-            coefBdAPtr[m] = 0;
-            coefCdAPtr[m] = 0;
-            coefIndAPtr[m] = 0;
-            
-            ++i;
-        } else {
-            coefB = 2.0 / pow (k, 2) - pow (eigenFrequencies[m], 2);
-            coefIn = phiIn[m] / (rho * h);
-            
-            coefIndA[m] = static_cast<float> (coefIn / coefA);
-            coefBdA[m] = static_cast<float> (coefB / coefA);
-            coefCdA[m] = static_cast<float> (coefC / coefA);
-            
-            coefIndAPtr[m] = coefIndA[m];
-            coefBdAPtr[m] = coefBdA[m];
-            coefCdAPtr[m] = coefCdA[m];
+            if (m == unstableEigenFrequencies[i])
+            {
+                coefBdAPtr[m] = 0;
+                coefCdAPtr[m] = 0;
+                coefIndAPtr[m] = 0;
+                ++i;
+            } else {
+                coefB = 2.0 / pow (k, 2) - pow (eigenFrequencies[m], 2);
+                coefIn = phiIn[m] / (rho * h);
+                
+                coefIndAPtr[m] = static_cast<float> (coefIn / coefA);
+                coefBdAPtr[m] = static_cast<float> (coefB / coefA);
+                coefCdAPtr[m] = static_cast<float> (coefC / coefA);
+            }
+        }
+    } else {
+        int i = 0;
+        for (int m = 0; m < vectorLength; ++m)
+        {
+            if (m == unstableEigenFrequencies[i])
+            {
+                coefBdA[m] = 0;
+                coefCdA[m] = 0;
+                coefIndA[m] = 0;
+                ++i;
+            } else {
+                coefB = 2.0 / pow (k, 2) - pow (eigenFrequencies[m], 2);
+                coefIn = phiIn[m] / (rho * h);
+                
+                coefIndA[m] = static_cast<float> (coefIn / coefA);
+                coefBdA[m] = static_cast<float> (coefB / coefA);
+                coefCdA[m] = static_cast<float> (coefC / coefA);
+            }
         }
     }
-    
+
 }
 
 /*
@@ -468,20 +508,36 @@ void PlateReverb2AudioProcessor::setFlangingL()
     
     // calculate all left output positions over one second using parameters from the UI
     int n;
-    for (int t = 0; t <= detail; ++t)
-    {
-        float* phiOutLFlangePtr = (float*)&__phiOutLFlange[t][0];
-        outputLX = radiusLX * sin (speedLX * 2 * double_Pi * t / detail + phaseLX) + 0.5;
-        outputLY = radiusLY * sin (speedLY * 2 * double_Pi * t / detail + phaseLY) + 0.5;
-        
-        n = 0;
-        for (int m = 0; m < vectorLength; ++m)
+    if (AVX){
+        for (int t = 0; t <= detail; ++t)
         {
-            phiOutLFlangePtr[m] = static_cast<float> (sin (horizontalModes[m] * double_Pi * outputLX)
-                                                      * sin (verticalModes[m] * double_Pi * outputLY));
+            float* phiOutLFlangePtr = (float*)&__phiOutLFlange[t][0];
+            outputLX = radiusLX * sin (speedLX * 2 * double_Pi * t / detail + phaseLX) + 0.5;
+            outputLY = radiusLY * sin (speedLY * 2 * double_Pi * t / detail + phaseLY) + 0.5;
+            
+            n = 0;
+            for (int m = 0; m < vectorLength; ++m)
+            {
+                phiOutLFlangePtr[m] = static_cast<float> (sin (horizontalModes[m] * double_Pi * outputLX)
+                                                          * sin (verticalModes[m] * double_Pi * outputLY));
+            }
         }
-
+        
+    } else {
+        for (int t = 0; t <= detail; ++t)
+        {
+            outputLX = radiusLX * sin (speedLX * 2 * double_Pi * t / detail + phaseLX) + 0.5;
+            outputLY = radiusLY * sin (speedLY * 2 * double_Pi * t / detail + phaseLY) + 0.5;
+            
+            n = 0;
+            for (int m = 0; m < vectorLength; ++m)
+            {
+                phiOutLFlange[t][m] = static_cast<float> (sin (horizontalModes[m] * double_Pi * outputLX)
+                                                       * sin (verticalModes[m] * double_Pi * outputLY));
+            }
+        }
     }
+    
 }
 
 /*
@@ -498,17 +554,34 @@ void PlateReverb2AudioProcessor::setFlangingR()
     
     // calculate all right output positions over one second using parameters from the UI
     int n;
-    for (int t = 0; t <= detail; ++t)
+    if (AVX)
     {
-        float* phiOutRFlangePtr = (float*)&__phiOutRFlange[t][0];
-        outputRX = radiusRX * sin (speedRX * 2 * double_Pi * t / detail + phaseRX) + 0.5;
-        outputRY = radiusRY * sin (speedRY * 2 * double_Pi * t / detail + phaseRY) + 0.5;
-        
-        n = 0;
-        for (int m = 0; m < vectorLength; ++m)
+        for (int t = 0; t <= detail; ++t)
         {
-            phiOutRFlangePtr[m] = static_cast<float> (sin (horizontalModes[m] * double_Pi * outputRX)
-                                                      * sin (verticalModes[m] * double_Pi * outputRY));
+            float* phiOutRFlangePtr = (float*)&__phiOutRFlange[t][0];
+            outputRX = radiusRX * sin (speedRX * 2 * double_Pi * t / detail + phaseRX) + 0.5;
+            outputRY = radiusRY * sin (speedRY * 2 * double_Pi * t / detail + phaseRY) + 0.5;
+            
+            n = 0;
+            for (int m = 0; m < vectorLength; ++m)
+            {
+                phiOutRFlangePtr[m] = static_cast<float> (sin (horizontalModes[m] * double_Pi * outputRX)
+                                                          * sin (verticalModes[m] * double_Pi * outputRY));
+            }
+        }
+        
+    } else {
+        for (int t = 0; t <= detail; ++t)
+        {
+            outputRX = radiusRX * sin (speedRX * 2 * double_Pi * t / detail + phaseRX) + 0.5;
+            outputRY = radiusRY * sin (speedRY * 2 * double_Pi * t / detail + phaseRY) + 0.5;
+            
+            n = 0;
+            for (int m = 0; m < vectorLength; ++m)
+            {
+                phiOutRFlange[t][m] = static_cast<float> (sin (horizontalModes[m] * double_Pi * outputRX)
+                                                             * sin (verticalModes[m] * double_Pi * outputRY));
+            }
         }
         
     }
@@ -540,21 +613,36 @@ void PlateReverb2AudioProcessor::calculateCoefIndA()
     }
     
     int i = 0;
-    float* coefIndAPtr = (float*)&__coefIndA[0];
     
-    for (int m = 0; m < vectorLength; ++m)
+    if (AVX)
     {
-        if (m == unstableEigenFrequencies[i])
-        {
-            coefIndA[m] = 0;
-            ++i;
-        } else {
-            phiIn = (sin (horizontalModes[m] * double_Pi * inputX) * sin (verticalModes[m] * double_Pi * inputY));
-            coefIndA[m] = static_cast<float> ((phiIn / (rho * h)) / coefA);
-            coefIndAPtr[m] = coefIndA[m];
-
-        }
+        float* coefIndAPtr = (float*)&__coefIndA[0];
         
+        for (int m = 0; m < vectorLength; ++m)
+        {
+            if (m == unstableEigenFrequencies[i])
+            {
+                coefIndA[m] = 0;
+                ++i;
+            } else {
+                phiIn = (sin (horizontalModes[m] * double_Pi * inputX) * sin (verticalModes[m] * double_Pi * inputY));
+                coefIndAPtr[m] = static_cast<float> ((phiIn / (rho * h)) / coefA);
+                
+            }
+            
+        }
+    } else {
+        for (int m = 0; m < vectorLength; ++m)
+        {
+            if (m == unstableEigenFrequencies[i])
+            {
+                coefIndA[m] = 0;
+                ++i;
+            } else {
+                phiIn = (sin (horizontalModes[m] * double_Pi * inputX) * sin (verticalModes[m] * double_Pi * inputY));
+                coefIndA[m] = static_cast<float> ((phiIn / (rho * h)) / coefA);
+            }
+        }
     }
 
 }
@@ -570,14 +658,21 @@ void PlateReverb2AudioProcessor::calculatePhiOutL()
     const double& outputLX = positions.getOutputL().getX();
     const double& outputLY = positions.getOutputL().getY();
 
-    float* phiOutLPtr = (float*)&__phiOutL[0];
-    
-    for (int m = 0; m < vectorLength; ++m)
+    if (AVX)
     {
-        phiOutL[m] = sin (horizontalModes[m] * double_Pi * outputLX) * sin (verticalModes[m] * double_Pi * outputLY);
-        phiOutLPtr[m] = phiOutL[m];
+        float* phiOutLPtr = (float*)&__phiOutL[0];
+        
+        for (int m = 0; m < vectorLength; ++m)
+        {
+            phiOutLPtr[m] = sin (horizontalModes[m] * double_Pi * outputLX) * sin (verticalModes[m] * double_Pi * outputLY);
+        }
+        
+    } else {
+        for (int m = 0; m < vectorLength; ++m)
+        {
+            phiOutL[m] = sin (horizontalModes[m] * double_Pi * outputLX) * sin (verticalModes[m] * double_Pi * outputLY);
+        }
     }
-    
 }
 
 /*
@@ -591,20 +686,33 @@ void PlateReverb2AudioProcessor::calculatePhiOutR()
     const double& outputRX = positions.getOutputR().getX();
     const double& outputRY = positions.getOutputR().getY();
     
-    float* phiOutRPtr = (float*)&__phiOutR[0];
-    
-    for (int m = 0; m < vectorLength; ++m)
+    if (AVX)
     {
-        phiOutR[m] = sin (horizontalModes[m] * double_Pi * outputRX) * sin (verticalModes[m] * double_Pi * outputRY);
-        phiOutRPtr[m] = phiOutR[m];
+        float* phiOutRPtr = (float*)&__phiOutR[0];
+        
+        for (int m = 0; m < vectorLength; ++m)
+        {
+            phiOutRPtr[m] = sin (horizontalModes[m] * double_Pi * outputRX) * sin (verticalModes[m] * double_Pi * outputRY);
+        }
+        
+    } else {
+        for (int m = 0; m < vectorLength; ++m)
+        {
+            phiOutR[m] = sin (horizontalModes[m] * double_Pi * outputRX) * sin (verticalModes[m] * double_Pi * outputRY);
+        }
     }
-
 }
 
 void PlateReverb2AudioProcessor::createNewQVectors()
 {
-    __qPrev = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
-    __qNow = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
+    if (AVX)
+    {
+        __qPrev = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
+        __qNow = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
+    } else {
+        qPrev = std::vector<float> (vectorLength, 0);
+        qNow = std::vector<float> (vectorLength, 0);
+    }
     
 }
 
@@ -612,6 +720,9 @@ void PlateReverb2AudioProcessor::createNewQVectors()
 //==============================================================================
 void PlateReverb2AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    //Check whether the system has AVX2-intrinsics
+    useAVX();
+    
     //Initialise the Eigenfrequency Matrix (Omega, Horizontal Modes and Vertical Modes)
     calculateAndSortOmegaMatrix();
     deleteCents();
@@ -628,24 +739,35 @@ void PlateReverb2AudioProcessor::prepareToPlay (double sampleRate, int samplesPe
     coefIndA = std::vector<float> (vectorLength, 0.0);
     calculateCoefficients();
     
-    //Convert all that is calculated above to AVX-Compatible variables (/vectors)
-    AVXAll();
+    if (AVX)
+    {
+        //Convert all that is calculated above to AVX-Compatible variables (/vectors)
+        AVXAll();
 
-    //Initialise Matrices that will be used for Moving/Flanging Outputs
-    __phiOutLFlange = std::vector<std::vector<__m256>> (detail + 1, std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps()));
-    __phiOutRFlange = std::vector<std::vector<__m256>> (detail + 1, std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps()));
+        //Initialise Matrices that will be used for Moving/Flanging Outputs
+        __phiOutLFlange = std::vector<std::vector<__m256>> (detail + 1, std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps()));
+        __phiOutRFlange = std::vector<std::vector<__m256>> (detail + 1, std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps()));
+    } else {
+        phiOutLFlange = std::vector<std::vector<float>> (detail + 1, std::vector<float> (vectorLength, 0));
+        phiOutRFlange = std::vector<std::vector<float>> (detail + 1, std::vector<float> (vectorLength, 0));
+    }
     setFlangingL();
     setFlangingR();
     
-    __phiOutLFlangeUse = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
-    __phiOutRFlangeUse = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
-    
-    //Initialise other vectors
-    __qNow = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
-    __qPrev = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
-    __qNext = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
-    __resultL = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());;
-    __resultR = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());;
+    if (AVX)
+    {
+        __phiOutLFlangeUse = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
+        __phiOutRFlangeUse = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
+        
+        //Initialise other vectors
+        __qNow = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
+        __qPrev = std::vector<__m256> (AVXVectorLength, _mm256_setzero_ps());
+        __resultL = _mm256_setzero_ps();
+        __resultR = _mm256_setzero_ps();
+    } else {
+        qNow = std::vector<float> (vectorLength, 0);
+        qPrev = std::vector<float> (vectorLength, 0);
+    }
 
 }
 
@@ -744,6 +866,29 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
     float outputSumL;
     float outputSumR;
     
+    float qNext = 0.0;
+    __m256 __qNext = _mm256_setzero_ps();
+    
+    if (AVX)
+    {
+        __coefBdAPtr = &__coefBdA[0];
+        __qNowPtr = &__qNow[0];
+        __coefCdAPtr = &__coefCdA[0];
+        __qPrevPtr = &__qPrev[0];
+        __coefIndAPtr = &__coefIndA[0];
+        __phiOutLPtr = &__phiOutL[0];
+        __phiOutRPtr = &__phiOutR[0];
+        
+    } else {
+        coefBdAPtr = &coefBdA[0];
+        qNowPtr = &qNow[0];
+        coefCdAPtr = &coefCdA[0];
+        qPrevPtr = &qPrev[0];
+        coefIndAPtr = &coefIndA[0];
+        phiOutLPtr = &phiOutL[0];
+        phiOutRPtr = &phiOutR[0];
+    }
+    
     for (int channel = 0; channel < totalNumOutputChannels; ++channel) //for all channels do...
     {
         float* outputData = buffer.getWritePointer (channel);
@@ -752,19 +897,22 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
             outputSumL = 0.0;
             outputSumR = 0.0;
             
-            if (flangingL) //if the left microphone is moving do...
+            if (AVX)
             {
-                posUseL = (static_cast<int> (pos / (2 * fs / __phiOutLFlange.size())) % static_cast<int> (__phiOutLFlange.size()));
+                __inputUse = _mm256_set1_ps (inputUse);
                 
+                if (flangingL)
+                    posUseL = (static_cast<int> (pos / (2 * fs / __phiOutLFlange.size())) % static_cast<int> (__phiOutLFlange.size()));
+                if (flangingR)
+                    posUseR = (static_cast<int> (pos / (2 * fs / __phiOutRFlange.size())) % static_cast<int> (__phiOutRFlange.size()));
+    
+            } else {
+                if (flangingL)
+                    posUseL = (static_cast<int> (pos / (2 * fs / phiOutLFlange.size())) % static_cast<int> (phiOutLFlange.size()));
+                if (flangingR)
+                    posUseR = (static_cast<int> (pos / (2 * fs / phiOutRFlange.size())) % static_cast<int> (phiOutRFlange.size()));
             }
-            
-            if (flangingR)
-            {
-                posUseR = (static_cast<int> (pos / (2 * fs / __phiOutRFlange.size())) % static_cast<int> (__phiOutRFlange.size()));
-            }
-            
-            __m256 __inputUse (_mm256_setr_ps (inputUse, inputUse, inputUse, inputUse, inputUse, inputUse, inputUse, inputUse));
-
+    
             /*
              ==============================================================================
                 Main Loop
@@ -773,54 +921,101 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
             
             if (channel == 0)
             {
-                if (flangingL)
-                {
-                    __phiOutLFlangeUse = __phiOutLFlange[posUseL];
-                }
-                
-                if (flangingR)
-                {
-                    __phiOutRFlangeUse = __phiOutRFlange[posUseR];
-                }
-    
                 
                 //for all modes do...
-                for (int m = 0; m < AVXVectorLength; ++m)
+                if (AVX)
                 {
-                    //The update equation
-                    __qNext[m] = _mm256_add_ps (_mm256_add_ps (_mm256_mul_ps (__coefBdA[m], __qNow[m]),
-                                                               _mm256_mul_ps (__coefCdA[m], __qPrev[m])),
-                                                _mm256_mul_ps (__coefIndA[m], __inputUse));
                     if (flangingL)
                     {
-                        __resultL[m] = _mm256_mul_ps (__qNext[m], __phiOutLFlangeUse[m]);
+                        __phiOutLFlangePtr = &__phiOutLFlange[posUseL][0];
+                        flangingL2 = true;
                     } else {
-                        __resultL[m] = _mm256_mul_ps (__qNext[m], __phiOutL[m]);
+                        flangingL2 = false;
                     }
-                    
                     if (flangingR)
                     {
-                        __resultR[m] = _mm256_mul_ps (__qNext[m], __phiOutRFlangeUse[m]);
+                        __phiOutRFlangePtr = &__phiOutRFlange[posUseR][0];
+                        flangingR2 = true;
                     } else {
-                        __resultR[m] = _mm256_mul_ps (__qNext[m], __phiOutR[m]);
+                        flangingR2 = false;
                     }
                     
-                    resultL = (float*)&__resultL[m];
-                    resultR = (float*)&__resultR[m];
-                    
-                    for (int n = 0; n < AVX; ++n)
+                    for (int m = 0; m < AVXVectorLength; ++m)
                     {
-                        outputSumL = outputSumL + resultL[n];
-                        outputSumR = outputSumR + resultR[n];
+                        //The update equation
+                        __qNext = _mm256_add_ps (_mm256_add_ps (_mm256_mul_ps (__coefBdAPtr[m], __qNowPtr[m]),
+                                                                   _mm256_mul_ps (__coefCdAPtr[m], __qPrevPtr[m])),
+                                                    _mm256_mul_ps (__coefIndAPtr[m], __inputUse));
+                        if (flangingL2)
+                        {
+                            __resultL = _mm256_mul_ps (__qNext, __phiOutLFlangePtr[m]);
+                        } else {
+                            __resultL = _mm256_mul_ps (__qNext, __phiOutLPtr[m]);
+                        }
+                        
+                        if (flangingR2)
+                        {
+                            __resultR = _mm256_mul_ps (__qNext, __phiOutRFlangePtr[m]);
+                        } else {
+                            __resultR = _mm256_mul_ps (__qNext, __phiOutRPtr[m]);
+                        }
+                        
+                        resultLPtr = (float*)&__resultL;
+                        resultRPtr = (float*)&__resultR;
+                        
+                        for (int n = 0; n < AVXSize; ++n)
+                        {
+                            outputSumL = outputSumL + resultLPtr[n];
+                            outputSumR = outputSumR + resultRPtr[n];
+                        }
+                        
+                        __qPrevPtr[m] = __qNowPtr[m];
+                        __qNowPtr[m] = __qNext;
                     }
-                
-                    __qPrev[m] = __qNow[m];
-                    __qNow[m] = __qNext[m];
-                    inputUse = inputData[i] / 2;
+                    
+                } else {
+                    
+                    if (flangingL)
+                    {
+                        phiOutLFlangePtr = &phiOutLFlange[posUseL][0];
+                        flangingL2 = true;
+                    } else {
+                        flangingL2 = false;
+                    }
+                    if (flangingR)
+                    {
+                        phiOutRFlangePtr = &phiOutRFlange[posUseR][0];
+                        flangingR2 = true;
+                    } else {
+                        flangingR2 = false;
+                    }
+                    
+                    for (int m = 0; m < vectorLength; ++m)
+                    {
+                        //The update equation
+                        qNext = coefBdAPtr[m] * qNowPtr[m] + coefCdAPtr[m] * qPrevPtr[m] + coefIndAPtr[m] * inputUse;
+                        
+                        if (flangingL2)
+                        {
+                            outputSumL = outputSumL + qNext * phiOutLFlangePtr[m];
+                        } else {
+                            outputSumL = outputSumL + qNext * phiOutLPtr[m];
+                        }
+                        
+                        if (flangingR2)
+                        {
+                            outputSumR = outputSumR + qNext * phiOutRFlangePtr[m];
+                        } else {
+                            outputSumR = outputSumR + qNext * phiOutRPtr[m];
+                        }
+                        
+                        qPrevPtr[m] = qNowPtr[m];
+                        qNowPtr[m] = qNext;
+                    }
                 }
                 
+                inputUse = inputData[i] / 2;
                 ++pos;
-                
                 outputData[i] = (outputSumL * 1500.0) * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0;
                 outputChannel2.push_back ((outputSumR * 1500.0) * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0);
                 
@@ -828,7 +1023,9 @@ void PlateReverb2AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
                 if (std::abs (outputSumL * 1500.0 * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0) > 4.0
                     || std::abs (outputSumR * 1500.0 * gain + (inputData[i] / 2) * (100.0 - gain) / 100.0) > 4.0){
                     std::cout<<"Whoops!"<<std::endl;
-
+//                    createNewQVectors();
+//                    outputSumL = 0.0;
+//                    outputSumR = 0.0;
                 }
                 
             } else {

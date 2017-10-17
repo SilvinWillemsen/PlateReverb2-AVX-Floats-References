@@ -147,6 +147,7 @@ public:
         Additional functions
      ==============================================================================
     */
+    void useAVX();
     
     void calculateAndSortOmegaMatrix();
     void deleteCents();
@@ -215,14 +216,45 @@ public:
     std::vector<__m256> __phiOutLFlangeUse;
     std::vector<__m256> __phiOutRFlangeUse;
     
-    std::vector<__m256> __qNext;
+    std::vector<std::vector<float>> phiOutLFlange;
+    std::vector<std::vector<float>> phiOutRFlange;
+    std::vector<float> phiOutLFlangeUse;
+    std::vector<float> phiOutRFlangeUse;
+
     std::vector<__m256> __qNow;
     std::vector<__m256> __qPrev;
-    std::vector<__m256> __resultL;
-    std::vector<__m256> __resultR;
+    __m256 __resultL;
+    __m256 __resultR;
     
-    float* resultL = nullptr;
-    float* resultR = nullptr;
+    std::vector<float> qNext;
+    std::vector<float> qNow;
+    std::vector<float> qPrev;
+    std::vector<float> resultL;
+    std::vector<float> resultR;
+    
+    //initialise AVX pointers
+    __m256* __coefBdAPtr = nullptr;
+    __m256* __qNowPtr = nullptr;
+    __m256* __coefCdAPtr = nullptr;
+    __m256* __qPrevPtr = nullptr;
+    __m256* __coefIndAPtr = nullptr;
+    __m256* __phiOutLPtr = nullptr;
+    __m256* __phiOutRPtr = nullptr;
+    __m256* __phiOutLFlangePtr = nullptr;
+    __m256* __phiOutRFlangePtr = nullptr;
+    
+    //initialise non-AVX pointers
+    float* coefBdAPtr = nullptr;
+    float* qNowPtr = nullptr;
+    float* coefCdAPtr = nullptr;
+    float* qPrevPtr = nullptr;
+    float* coefIndAPtr = nullptr;
+    float* phiOutLPtr = nullptr;
+    float* phiOutRPtr = nullptr;
+    float* phiOutLFlangePtr = nullptr;
+    float* phiOutRFlangePtr = nullptr;
+    float* resultLPtr = nullptr;
+    float* resultRPtr = nullptr;
     
     unsigned long vectorLength = 0;
     unsigned long AVXVectorLength = 0;
@@ -230,11 +262,12 @@ public:
     
     std::vector<int> unstableEigenFrequencies;
     
-    const bool AVXActive = true;
-    const int AVX = 8;
+    bool AVX = false;
+    const int AVXSize = 8;
     int AVXZeros = 0;
     int AVXZerosPrev = 0;
     float inputUse = 0.0;
+    __m256 __inputUse = _mm256_setzero_ps();
     
     /*
      ==============================================================================
@@ -245,7 +278,7 @@ public:
     double gain = 1.0;
     double Lx = 2.0;
     double Ly = 1.0;
-    double C = 10.0;
+    double C = 5.0;
     double decay = 4.0;
     
     double radiusLX = 0.4;
@@ -280,6 +313,8 @@ public:
     bool flangeFlagL = false;
     bool flangingL = false;
     bool flangingR = false;
+    bool flangingL2 = false;
+    bool flangingR2 = false;
     
     bool inputChange = false;
     bool outputLChange = false;
